@@ -86,109 +86,68 @@
               <el-table
                   :data="tableData"
                   border
-                  style="width: 100%">
+                  style="width: 100%"
+                  :align="'center'">
                 <el-table-column
                     prop="0"
-                    label=" ">
+                    label=" "
+                    :align="'center'">
                 </el-table-column>
                 <el-table-column
                     prop="1"
-                    label="周一">
+                    label="周一"
+                    :align="'center'">
                 </el-table-column>
                 <el-table-column
                     prop="2"
-                    label="周二">
+                    label="周二"
+                    :align="'center'">
                 </el-table-column>
                 <el-table-column
                     prop="3"
-                    label="周三">
+                    label="周三"
+                    :align="'center'">
                 </el-table-column>
                 <el-table-column
                     prop="4"
-                    label="周四">
+                    label="周四"
+                    :align="'center'">
                 </el-table-column>
                 <el-table-column
                     prop="5"
-                    label="周五">
+                    label="周五"
+                    :align="'center'">
                 </el-table-column>
                 <el-table-column
                     prop="6"
-                    label="周六">
+                    label="周六"
+                    :align="'center'">
                 </el-table-column>
                 <el-table-column
                     prop="7"
-                    label="周日">
+                    label="周日"
+                    :align="'center'">
                 </el-table-column>
               </el-table>
-            </div>
-            <div style="margin: 20px">
-              <el-pagination
-                  background
-                  layout="prev, pager, next"
-                  :total="1000">
-              </el-pagination>
+
+              <div style="margin: 20px">
+                <el-row>
+                  <el-button type="primary" @click="previous">上一页</el-button>
+                  <el-button type="primary" @click="next">下一页</el-button>
+                </el-row>
+              </div>
+
+<!--              <div style="margin: 20px">-->
+<!--                <el-pagination-->
+<!--                    background-->
+<!--                    layout="prev, pager, next"-->
+<!--                    :total="1000">-->
+<!--                </el-pagination>-->
+<!--              </div>-->
+
             </div>
           </el-card>
 
-<!--          <el-card style="width: 800px">-->
-
-<!--            <div slot="header" class="clearfix">-->
-<!--              <span>小标题</span>-->
-<!--            </div>-->
-<!--            -->
-<!--            <div>-->
-<!--              <el-form ref="form" :model="form" label-width="80px">-->
-<!--                <el-form-item label="活动名称">-->
-<!--                  <el-input v-model="form.name"></el-input>-->
-<!--                </el-form-item>-->
-<!--                <el-form-item label="活动区域">-->
-<!--                  <el-select v-model="form.region" placeholder="请选择活动区域">-->
-<!--                    <el-option label="区域一" value="shanghai"></el-option>-->
-<!--                    <el-option label="区域二" value="beijing"></el-option>-->
-<!--                  </el-select>-->
-<!--                </el-form-item>-->
-<!--                <el-form-item label="活动时间">-->
-<!--                  <el-col :span="11">-->
-<!--                    <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>-->
-<!--                  </el-col>-->
-<!--                  <el-col class="line" :span="2">-</el-col>-->
-<!--                  <el-col :span="11">-->
-<!--                    <el-time-picker placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>-->
-<!--                  </el-col>-->
-<!--                </el-form-item>-->
-<!--                <el-form-item label="即时配送">-->
-<!--                  <el-switch v-model="form.delivery"></el-switch>-->
-<!--                </el-form-item>-->
-<!--                <el-form-item label="活动性质">-->
-<!--                  <el-checkbox-group v-model="form.type">-->
-<!--                    <el-checkbox label="美食/餐厅线上活动" name="type"></el-checkbox>-->
-<!--                    <el-checkbox label="地推活动" name="type"></el-checkbox>-->
-<!--                    <el-checkbox label="线下主题活动" name="type"></el-checkbox>-->
-<!--                    <el-checkbox label="单纯品牌曝光" name="type"></el-checkbox>-->
-<!--                  </el-checkbox-group>-->
-<!--                </el-form-item>-->
-<!--                <el-form-item label="特殊资源">-->
-<!--                  <el-radio-group v-model="form.resource">-->
-<!--                    <el-radio label="线上品牌商赞助"></el-radio>-->
-<!--                    <el-radio label="线下场地免费"></el-radio>-->
-<!--                  </el-radio-group>-->
-<!--                </el-form-item>-->
-<!--                <el-form-item label="活动形式">-->
-<!--                  <el-input type="textarea" v-model="form.desc"></el-input>-->
-<!--                </el-form-item>-->
-<!--                <el-form-item>-->
-<!--                  <el-button type="primary" @click="onSubmit">立即创建</el-button>-->
-<!--                  <el-button>取消</el-button>-->
-<!--                </el-form-item>-->
-<!--              </el-form>-->
-<!--            </div>-->
-<!--          </el-card>-->
-          <!--          <el-table stripe :header-cell-style="{ backgroundColor: 'aliceblue', fontWeight: 'bold', color: '#333' }">-->
-          <!--            <el-table-column label="姓名" align="center"></el-table-column>-->
-          <!--            <el-table-column label="电话" align="center"></el-table-column>-->
-          <!--            <el-table-column label="邮箱" align="center"></el-table-column>-->
-          <!--            <el-table-column label="地址" align="center"></el-table-column>-->
-          <!--          </el-table>-->
         </el-main>
       </el-container>
     </el-container>
@@ -225,25 +184,25 @@ export default {
         0: '第一节',
         1: '',
         2: '',
-        3: '高等数学（上）',
+        3: '',
         4: '',
-        5: 'EAP',
+        5: '',
         6: '',
         7: '',
       }, {
         0: '第二节',
         1: '',
-        2: '大学物理（上）',
+        2: '',
         3: '',
         4: '',
-        5: 'EAP',
+        5: '',
         6: '',
         7: '',
       }, {
         0: '第三节',
         1: '',
-        2: '大学物理（上）',
-        3: '高等数学（上）',
+        2: '',
+        3: '',
         4: '',
         5: '',
         6: '',
@@ -251,41 +210,33 @@ export default {
       }, {
         0: '第四节',
         1: '',
-        2: '大学物理（上）',
+        2: '',
         3: '',
         4: '',
-        5: 'EAP',
+        5: '',
         6: '',
         7: '',
       }, {
         0: '第五节',
         1: '',
         2: '',
-        3: '高等数学（上）',
+        3: '',
         4: '',
-        5: 'EAP',
+        5: '',
         6: '',
         7: '',
       }, {
         0: '第六节',
         1: '',
-        2: '大学物理（上）',
-        3: '高等数学（上）',
+        2: '',
+        3: '',
         4: '',
-        5: 'EAP',
+        5: '',
         6: '',
         7: '',
-      }, {
-        0: '第七节',
-        1: '',
-        2: '大学物理（上）',
-        3: '高等数学（上）',
-        4: '',
-        5: 'EAP',
-        6: '',
-        7: '',
-      },
-      ]
+      }],
+      index: 0,
+      scheme: {},
     }
   },
   mounted() {
@@ -307,25 +258,53 @@ export default {
       this.axios.post('http://localhost:1314/submit_data', {
         'password': 'my father is YHT', 'student_name': '', 'keywords': obj, 'badwords': [''], 'excluded_time': {'点': []}
       }).then(res=>{
-        console.log(res)
-        console.log(res.data.schedule_scheme[0])
-        let obj = res.data.schedule_scheme[0]
-        for (let i = 0; i < obj.length; i++) {
-          console.log(obj[i])
-          console.log(obj[i]['上课时间'])
-          console.log(obj[i]['教学班'])
-        }
-        localStorage.setItem('list',res.data.schedule_scheme)
+
+        this.scheme = res.data.schedule_scheme
+        // console.log(this.scheme)
+        this.show(this.index)
+
       })
     },
-    change() {
 
-      this.tableData[0][1] = '大学化学'
-      this.tableData[0][2] = '大学生物'
-      console.log(this.tableData[0])
-      console.log(this.tableData[0][1])
-      console.log(this.tableData[1][2])
+    show(index) {
+      if (index < 0) {
+        index += 1
+      }
+      if (index >= this.scheme.length){
+        index -= 1
+      }
+      let obj = this.scheme[index]
+      for (let i = 0; i < obj.length; i++) {
 
+        let date1 = obj[i]['上课时间'][0][1]
+        let time1 = obj[i]['上课时间'][0][0]
+
+        let date2 = obj[i]['上课时间'][1][1]
+        let time2 = obj[i]['上课时间'][1][0]
+
+        let classname = obj[i]['教学班']
+
+        this.tableData[date1-1][time1] = classname
+        this.tableData[date2-1][time2] = classname
+
+        this.index = index
+        // 组成 原理
+      }
+    },
+    next() {
+      this.clear()
+      this.show(this.index+1)
+    },
+    previous() {
+      this.clear()
+      this.show(this.index-1)
+    },
+    clear() {
+      for (let i = 0; i <= 5; i++) {
+        for (let j = 1; j <= 7; j++) {
+          this.tableData[i][j] = ''
+        }
+      }
     }
   }
 }
