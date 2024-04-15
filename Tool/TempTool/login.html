@@ -1,0 +1,422 @@
+<!DOCTYPE html><html>
+
+<head>
+    <title>Login -  Central Authentication Service</title>
+    <meta charset="UTF-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" /><link rel="stylesheet" type="text/css" href="/cas/webjars/normalize.css/8.0.1/normalize.css" /><link rel="stylesheet" type="text/css" href="/cas/webjars/bootstrap/4.5.0/css/bootstrap-grid.min.css" /><link rel="stylesheet" type="text/css" href="/cas/webjars/material-components-web/4.0.0/dist/material-components-web.css" /><link rel="stylesheet" type="text/css" href="/cas/webjars/mdi__font/5.0.45/css/materialdesignicons.css" /><link rel="stylesheet" type="text/css" href="/cas/css/cas.css?v=6.2"/><link rel="stylesheet" type="text/css" href="./captcha/css/captcha.min.css"/><link rel="icon" href="/cas/favicon.ico" type="image/x-icon"/><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" /></head>
+
+<body class="login mdc-typography">
+<script type="text/javascript" src="/cas/webjars/es5-shim/4.5.9/es5-shim.js"></script>
+<script type="text/javascript" src="/cas/webjars/css-vars-ponyfill/2.3.1/dist/css-vars-ponyfill.min.js"></script>
+
+<script type="text/javascript" src="/cas/webjars/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="/cas/webjars/material-components-web/4.0.0/dist/material-components-web.js"></script>
+
+<script type="text/javascript" src="/cas/js/cas.js?v=6.2" ></script>
+<script type="text/javascript" src="/cas/captcha/js/crypto-js.min.js"></script>
+<script type="text/javascript" src="/cas/captcha/js/captcha.min.js"></script>
+
+<script>
+    resourceLoadedSuccessfully();
+    cssVars({});
+</script>
+
+<script>
+    /*<![CDATA[*/
+    var trackGeoLocation = false;
+    /*]]>*/
+</script>
+<div>
+    <header id="app-bar" class="mdc-top-app-bar mdc-top-app-bar--fixed mdc-elevation--z4">
+        <nav class="mdc-top-app-bar__row">
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                <button class="mdc-icon-button mdc-top-app-bar__navigation-icon">
+                    <span class="mdi mdi-menu"></span>
+                    <span class="sr-only">menu</span>
+                </button>
+                <div class="cas-brand " style="width: 200px; background:url('/cas/images/cas-logo.png'); background-repeat: no-repeat;background-size: contain;margin-left: 20px; "></div>
+            </section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-center">
+<!--                <img class="cas-brand mx-auto" src="/cas/images/cas-logo.png"/>--></section>
+            <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" style="width: 160px;">
+<!--                <div style="float:right;color:white;">--><!--                    <form id="zh" style="display:inline;" method="post"><input type="hidden" name="locale" value="zh_CN"><button class="mdc-button mdc-button__label" style="min-width:6px;color:white;padding: 0;margin: 0;border: 0;" type="submit">中文</button></form>--><!--                    |--><!--                    <form id="en" style="display:inline;" method="post"><input type="hidden" name="locale" value="en"><button class="mdc-button mdc-button__label" style="min-width:6px;color:white;padding: 0;margin: 0;border: 0;" type="submit">En</button></form>--><!--                </div>--><button id="cas-notifications-menu"
+                        class="mdc-icon-button mdc-top-app-bar__action-item cas-notification-toggle"
+                        aria-label="Bookmark this page">
+                    <span class="mdi mdi-bell-alert"></span>
+                    <span class="sr-only">notifications</span>
+                    <i id="notifications-count" class="notifications-count count">0</i>
+                </button>
+            </section>
+        </nav>
+
+    </header>
+    <aside id="app-drawer" class="mdc-drawer mdc-drawer--dismissible mdc-drawer--modal">
+<!--        <div class="mdc-drawer__header">--><!--            <h3 class="mdc-drawer__title">CAS</h3>--><!--            <h6 class="mdc-drawer__subtitle">Central Authentication Service</h6>--><!--        </div>--><div class="mdc-drawer__content">
+            <nav class="mdc-list">
+                <a href="/cas/user/info" class="mdc-list-item banner-primary">
+                    <i class="mdi mdi-cog"></i>&nbsp;
+                    <span class="mdc-list-item__text">个人信息</span>
+                </a>
+                <!--                <a th:href="@{/actuator}" class="mdc-list-item">--><!--                    <i class="mdi mdi-cogs"></i>&nbsp;--><!--                    <span class="mdc-list-item__text">Actuator Endpoints</span>--><!--                </a>--><hr class="mdc-list-divider"/><div class="text-center">
+                <form id="zh" class="d-inline" method="post"><input type="hidden" name="locale" value="zh_CN"><button class="mdc-button mdc-button__label" type="submit">中文</button></form>
+                    <span>|</span>
+                <form id="en" class="d-inline" method="post"><input type="hidden" name="locale" value="en"><button class="mdc-button mdc-button__label" type="submit">En</button></form>
+                </div>
+            </nav>
+        </div>
+    </aside>
+
+    <script>var countMessages = 0;</script>
+    <div class="mdc-dialog cas-notification-dialog" id="cas-notification-dialog" role="alertdialog"
+         aria-modal="true" aria-labelledby="notif-dialog-title" aria-describedby="notif-dialog-content">
+        <div class="mdc-dialog__container">
+            <div class="mdc-dialog__surface">
+                <div class="mdc-dialog__content" id="notif-dialog-content" style="padding-bottom: 0;">
+                    <div class="cas-notification-message mdc-typography--body1">
+                        <h6 style="margin-bottom: 5px;" class="mdc-typography--headline6 mdi mdi-information-variant">学校域名系统</h6>
+                        <hr/><p>学校域名系统</p>
+                        <p>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        </p>
+                    </div>
+                </div>
+                <footer class="mdc-dialog__actions" style="background-color: #dddddd;">
+                    <button type="button" class="mdc-button mdc-dialog__button "  data-mdc-dialog-action="accept"
+                            data-mdc-dialog-button-default>
+                        <span class="mdc-button__label">继续</span>
+                    </button>
+                </footer>
+            </div>
+            </div>
+        <div class="mdc-dialog__scrim"></div>
+    </div>
+    <script type="text/javascript">
+
+        (function (material) {
+            var header = {
+                init: function () {
+                    header.attachTopbar();
+                    material.autoInit();
+                },
+                attachDrawer: function () {
+                    var elm = document.getElementById('app-drawer');
+                    var drawer = material.drawer.MDCDrawer.attachTo(elm);
+                    var closeDrawer = function (evt) {
+                        drawer.open = false;
+                    };
+                    drawer.foundation_.handleScrimClick = closeDrawer;
+                    document.onkeydown = function (evt) {
+                        evt = evt || window.event;
+                        if (evt.keyCode == 27) {
+                            closeDrawer();
+                        }
+                    };
+
+                    header.drawer = drawer;
+
+                    return drawer;
+                },
+                attachTopbar: function (drawer) {
+                    var drawer = header.attachDrawer();
+                    var dialog = header.attachNotificationDialog();
+                    header.attachDrawerToggle(drawer);
+                    header.attachNotificationToggle(dialog);
+                },
+                checkCaps: function (ev) {
+                    var s = String.fromCharCode(ev.which);
+                    if (s.toUpperCase() === s && s.toLowerCase() !== s && !ev.shiftKey) {
+                        ev.target.parentElement.classList.add('caps-on');
+                    } else {
+                        ev.target.parentElement.classList.remove('caps-on');
+                    }
+                },
+                attachDrawerToggle: function (drawer) {
+                    var topAppBar = material.topAppBar.MDCTopAppBar.attachTo(document.getElementById('app-bar'));
+                    topAppBar.setScrollTarget(document.getElementById('main-content'));
+                    topAppBar.listen('MDCTopAppBar:nav', function () {
+                        drawer.open = !drawer.open;
+                    });
+                    return topAppBar;
+                },
+                attachNotificationDialog: function () {
+                    var element = document.getElementById('cas-notification-dialog');
+                    var dialog = material.dialog.MDCDialog.attachTo(element);
+                    return dialog;
+                },
+                attachNotificationToggle: function (dialog) {
+                    var btn = document.getElementById('cas-notifications-menu');
+                    btn.addEventListener('click', function () {
+                        if(countMessages>0){
+                            dialog.open();
+                        }
+
+                    });
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                header.init();
+
+                if (countMessages == 0) {
+                    window.jQuery('#notifications-count').remove();
+                } else {
+                    window.jQuery('#notifications-count').text("(" + countMessages + ")")
+                }
+            });
+        })(mdc);
+    </script>
+</div>
+
+<div class="mdc-drawer-scrim"></div>
+
+<div class="mdc-drawer-app-content mdc-top-app-bar--fixed-adjust d-flex justify-content-center">
+    <main role="main" id="main-content" class="container-lg py-4">
+        <div id="content" class="d-flex justify-content-center">
+
+        <div  style="background-color: rgba(255,255,255,0.9);width:100%;"  class="d-flex justify-content-center flex-md-row flex-column mdc-card mdc-card-content w-lg-30">
+            <section id="loginForm"
+                class="login-section login-form">
+                <div class="d-flex flex-column justify-content-between m-auto">
+            <div>
+                <div id="serviceui" class="mb-4">
+        <div class="d-flex align-items-center p-2">
+            <img src="images/sustech.png" height="64" /><div id="servicedesc" class="ml-3">
+                <h2 style="margin-bottom: 3px;">
+                    <p style="margin-top: 0px;margin-bottom: 0px;">
+                        <span>
+                            <span>学校域名系统</span>
+                        </span>
+                    </p>
+                </h2>
+                </div>
+        </div>
+    </div>
+            </div>
+            <div class="form-wrapper">
+                <form method="post" id="fm1" action="login">
+
+                    <section class="cas-field my-2=3">
+                        </section>
+
+                    <section class="cas-field my-3">
+                        <div class="mdc-text-field  d-flex">
+                            <input class="mdc-text-field__input"
+                                id="username"
+                                size="25"
+                                type="text"
+                                accesskey="n"
+                                value=""
+                                autocomplete="off" name="username" /><label for="username" class="mdc-floating-label">用户名（SID）:</label>
+                        </div>
+                    </section>
+
+                    <section class="cas-field my-3 mdc-input-group">
+                        <div class="mdc-input-group-field mdc-input-group-field-append">
+                            <div class="mdc-text-field  mdc-text-field--with-trailing-icon d-flex caps-check">
+                                <input class="mdc-text-field__input pwd" type="password" id="password" size="25"
+                                    accesskey="p" autocomplete="off" name="password" value="" /><label for="username" class="mdc-floating-label">密　码:</label>
+                            </div>
+                            <div class="mdc-text-field-helper-line caps-warn">
+                                <p
+                                    class="mdc-text-field-helper-text mdc-text-field-helper-text--persistent mdc-text-field-helper-text--validation-msg text-danger">
+                                    <span >大写键已打开！</span>
+                                </p>
+                            </div>
+                        </div>
+                        <button class="reveal-password mdc-button mdc-button--raised mdc-input-group-append mdc-icon-button" type="button">
+                            <i class="mdi mdi-eye reveal-password-icon"></i>
+                            <span class="sr-only">Toggle Password</span>
+                        </button>
+                    </section>
+
+                    <section class="cas-field my-3">
+                        </section>
+
+                    <section class="cas-field">
+
+                        <div>
+<!--        <span th:if="${recaptchaVersion=='v2'}" th:remove="tag">--><!--        </span>--></div>
+
+                        <input type="hidden" name="execution" value="1044f98a-7abd-4865-8360-1839916892ed_ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmM4VHNmUldhNGc0UWRtbHRReWk5bFVkN0JHZzhDRDJWZDhhYVJZSTRvdk9vMEtJVmhiWlA2em8zaWhYWVF6MEo4TjRTVUFSd2txTG5mZ1UxbVg0eFY1R3dXS1VfRnM1Y1FwZDctc2UtYlN4ck12U0NXRHB1Y1dqTzVOek1Pd0ZDMExDNzN1RVFSb0xnMXFKSWNhSnRpSFIybENhZEhPUnJJdUFKVzRyMzRNM1p2b0hVclYzU0RMcDdwVDdoVjc3ejZVYnF1S1VXeHh5cUpQcVE1Y1R3ZG8zOVBucmxQYkNVeEpuaUgwNTZoN1hFNVNRZVhqZHZnckFBZjJoTXdiZVNGUlQ5MUZlcU9vLUxIWjNnT0dENTJZSUtpWGR3U1czX1RGdzQweEdvbzBLazFsM1lBdlhIUUVVSEFfYl96MFRjMWgzM3dDTFJZazJqb1Y0SDRJU0h0U043VFpfbnlBbklDMlRQNXptSXJ6UGJLVWl4ZlhMb3hHaVNGUkphTGFjUm1pTnBodTg1cW5MZ3RsM1Fnb3BQUi0yR21vb3BqNjlqM1J4VnNrRHJrVFNobDdDNE41NW1NaW1SZjJPb1I0WGZ6dUNnNTZjRTRPUHprUk00VV8xX0djNkdCdVhONjZQVWV2MXZISlJPMjlRUllacFFGY2J5NHhleWZlcDNyWTlOZmxudENJcTJhU19RYU9ETnZ3d1dldzBxNUFSRHFRbFdtOGl0b2xrUmtxYXVXcHFXMlJmVmJlMDhuVjhFeHVwNEk3Mlg5Q3NKV1lDZjRyLVFpY1lXS0psQ1FaenNJYWVmQTVrWHNHNGhLNWp6dXg4YVI4VkdQNnlyT1drQ2hpb1owQXNqTjhVNHdTZGtGXzhoQ0FhYWpDQ2hmWlRPeXNJOXoxRnRQcUhXX1lxT2Zkb2lqUUFuSm9UaGlCTFRhdWVWTzdSZVhwNm5GeGFUaXY3ZHk1eWRnQXNXandoSDM5dk1iOXhJdXJCUFl6MUdxOV96QmtDTmFKa0s4Q2VhRENuT3l1UFNQRkw2M18zT0NNY01MbV9TZjRXaUwtdWlrbDZWeGY5czljcHNJYnhjN2JSbmJHcTQzbkQ4dFZCWXF4QVBOSWdKaEVnVFYyLWEyXzlWSTU1ZXFKRlp2OWhxamU1Vjh4YWFuVC1DdG1YbE1nbUs2X20xZzRjOUF1NXp4VEk4bXIzSUJSMmZRZGVvM0Z2bFRqYVZ4Q3RPdk15clY4bkM2NlhQekt2M2JqcFM1amRJSGExNTRuYlc0UHZpZk5rZTR6SGpTUWEtZkoxSGZ6emhKM2tLbHdSZ3V6WnJvckI4bkZUUWtZeXRNWnBkbzVWaHBmdVpzVnZXbUY3RHVadXQ3NUVJbWZKV0U1TERQZHozQll2TWRVd0toeXJPMkZDTnY2V3JQelg2U2VEZk9ubTFmRFhQeUlsQzRGVW5rRlhEaUZIVEVMc1dUcHdzM1M3RTZVbnBRclRBV0huSTJDT0syazNvNklGWlFfN1FaSUdDd3NfY1pjTkRBeU0xS0xGUURjek1uQ2ZIcENYVmUwWnFfMU1pVnY5NlZqdkFMQlRHZEIyMWVrODRXTWpnWXk0U0JGclJ4cHY3Z0ZOMjNfSW1UYXRDS1kzU3Q4N1ViS0xPdjRJbkk0d0xfZkIydFR6b0I0THkwcUM5NzV2MVJLYUtrYUphb3kxRWVDUDk2dnFwQU1yUm02UXN3MEFRT1g2WS1fQkNtdUxDazA2dUlNUFdkb1dGQmtRRFg4UENWM3hjWElNTnhwd0cxZFAwM3VEejZYdS1zajNaZGl5SEFlOHgzTXJiQTFYbjI2TnRUcEwtUHdZZEdLTHB0NmVacHh3bFpDeUgxdXBtTlRDYmI0cndqb19jaGpxMUtPZDFvc2hQMmxYQUhWQ3ZTSmNfckdSX3p6VVI0bEpSSnlFM3EtZmtrMjNST2o2aVlnYXBWd0FuMkxWUHAzZXhiWE9qSzg3MmJHTU03Z2tFeXlKZ1lBai16bTRMOVZnNVB6WGc2NDFlNUcyc2lONXd0eUdpX2VzUmZCTEdPN0VLMk1iS21Gel9SVlN5ZWRKVGtwdTJTak5XZThCZUxuNmpEemFVajdHc0ZlV2ZCOG1QMXl6dUZjdlZHWXFyUUhmMjg2OWYwYWJHMVZCa1lKWjZZbkJaY3dzSE91QVpFdDFPemIwa3pMNlVxWEdkdFFxLS1UVTFxeVN0TmRiVGN0TzFtalh0NEpmYTRENjVxZ3djRHRiemE0VV9uSDNFTC0tamNqMGk0OGZrUEUwNWg5eUVWZlM0NWNfMk9IakVCb3lFTVM2bW1CbC10WUxuY3lRdUFXczJPS0FvczVnUEZNSVVFcnBiRld2RWNUMC00OUhRampibzFZZ0FhSkVEYzdFU1Q5UU12amUtMERtOC1VUFZsSWNHZjRxakpIQzFWWlljbUFXd0xVTXJjWXJmbjJIZ293UzdzWUdtVVFKQUg1N1BTdTExNThMMVVaSEFwUG0xODVNWjlJMEU2R2R3NGk1OEtFZ2Zxek9SbFBGeUJIUVdKV3ROSVdQeWVHUU5OLURhNEFjMFIwaFB6cmwzN0tIN19iZ0NoS25XeFhUM0lOSkxsOHBnODB6NVhzaUdFX1lDeHVtVTVlQlhfeGZMYk5sVjdPQThScFpYRXRUX3lObWNZQXZreXVPS0tfYzFHQzhXY3NIRVdoN2F5alJNVkF5bm1DaEFCdGdQSUV3R2ZvUHRFZ1ZLaUdwcEhqcUFhbFVzTmZKeFd6UktnNlNKX245dEQyamhXQ2g0MTd5bTFEMnFJYnZNMndkOWVBNkNrTnNQTW1OaElnRDZpMU9hcHZhREJKVU9pMUxpQ0NIRkZxeHl2VS1FeWdHTkFxQXRKdTlfREZnby1SNkdtQjRUMkdmYWNSOGhyR1k3TnZOVlJDS1hFRmg4YWVhR1Y2ZHdSLTkwLTBSRTZRQ1VpTFFlci1qUnhvX3dmRGVHc3hOLUNicFhsM3Nsd1ZaWVNQcXRqTVZ3eW42dFZ0Z3E3ZmdYeEVQY1VPbUVOQTcwNy1yZ2phVHktQ1Z5enZhQ1hvR2ZtM3VvYVhkYlRyc1IwQlREUHRqSzFNMTZOTE91U2ZtSVB0OFhoUHVBVWlqeUdBQ0ZVMFNFczJqWHB5ZExkMXU1VnViM3dYMjZGNnpxOEdPNzlUUnBNak5DOXYxb2JsWUlvd2lya1pyRFdRUEk3N29yaFo3T0MzbjZOQmprVk11WWRlcmNLaUUxNVBnMzdqaWRlcC10aEFkV2RzYlRiZXFTMTBvd1FjUmZENGM5Qkd4YWdGNUZjQTBMMGtTQVFyUWZxM3pvQWFoNWdnZnpaUnZMd0ZBZnRtUTFialdZYVdoUk9COVRlN3hSTS03TGtJZjhBeUJmSzhwa19XQlZ2a1ZWNVctbXJOR3h5X0JKeWwtbEViY1Q0OHFkOVQ5Q0ZHUjNTTDFIdG9CbEQyOTJhX0V1ZUhjZzZackU2dzB1QjRmamxjOFdHQnhtcGFMem9IOXFyTzZYUjA2WTBjcEVGUnp4eFdxUHlzUURSX3lVUFo5S1R1NTZTQUhIM2hWMlBmVEUtUVEzWXU4UGZjTGlIelM5VDNMLUZBalJVV2ZFVGhnZWRWSWpNcHp3VWJvTFk0YmxnenpVOXYtUVM1R2x0bDh2aXdPMEtJcWIwLVNHdEF3eWdxT1ZndzVaWkl6WkFGa3UyRzVuVkp5ZnZkbmwyY0ExYmJuc2JxLW1HMDBSbXdNa0xsRmY4QWxjZDhhWFhfdXZDbTIyczdmSnJaMmdCNVUxNVlFVG5fczAwY1B6NXJrbUg1TGIyY091dlJ5UnZJZ29WdHloQXd1NTNSbHBEM1RNWjAyRTh3V3VVS0Z0aDBjUkhpRFBIRlRxcWotM3QtZUs5U056SmprR0VGQ3lPdVRVWjNuaU1qMGNMZUs1NGpfTzZOelRDZEVwS3YwOEhGZlhRQTdZQ3FFZEJqbEF4SW1DT3JjVFN5R1kzWWZuZ3J3LXIwZTlzcWZ6NWx2TEY1V2JCbWg2bEI0eHpKNFNoY2hFMmhnX2VQS1FBMHgtUm5nQ0YxWUFGazc5bFNNUHpoRGFBUFp4S0ZKeTZHY3JoVjFKVE5lTXNJZ016ZnNLMDNVSGp5WDRzYnJKU0dHWmM1Y0lLYTVCb0x5TmdBWGpWbjlqVWxxTi0xWjBZbjlYeENfTVBTLWoweXVzWVI5amdidC1TWi1HMlN0dkZrMm00U3oyWlJ0OXF3c1NoSDhfY0N4cWt1Z3F4WmpFRWZrN2o2eHVKYWpMaHR5VjVfVWF0aWpkR2Jnc0M3b21KTGljcGpnRV9KMHFWUGM5QXNYQVotdWxlaWhTOE54MXotdmpnRmZpTUJ5TkthdXE1dzVqMEpnbF9hQWFmNUpQeW5qSVhMZFlTRzlsT3Z2OFVBVDY1LUVIdXB2RXhGbzZfQUlCY0F4bFBQc0duVmdCLUkyRmhtZXZQZzV5YWxaZWxFdU53LW5Tc2hNNkhMdThtSGEyODFmenF5QTdxSmoyWThnWnA3R2l5dnQ2WEYtY1p5djMwS29TQVhXeEQ0NkJIb3JZckJCdHpNclYzTkUxRjJwUDV6RVRLSWpnMjZmN25ObUJhaHliRWJPTWZMdGVqZXRJVUp3SmhPQlBqWFdTZDFMQ3pNQS1vb0Uyd2o3UFhreV9EYTJnZUhyVGFlYjZtclE2SVFlT1g2NUJaUi16X1FfeV9mZUVENWlES1RLTkF6Rl9Gck9wRzlxaHkxaVJwNnUwdTZRc1RDVXUwWFBVUFNla0xYeXBwVHFWbjUzTlhFaXRIMUdYclNkcTJ5V2VTSmdHUnZuT2k5Q29aR2pOUXU5V3o2SGpLYU84bkhsNzdfRVIzU2haTlVSdDlxR3VxV0tVV20xQ2Q1ZUw3MHN1ZjZrUGhYWWFkMUxYb3l5YmY3WVd4aXo0bWgzclJOUW1fRU5MZTB2OGtNekJCOHF0dHk4MkpjRkNkaFBmVHIxaTNlNmMtaWtZUlhQZWMyMUV6azh3cVRkMWp0WnNaVUlqWEJaSkhJR05HYlZsRTIxajBZbGhSLUdhVzFpeUlCdlR5ZzJNTVJNUWZRckN2NGVCOXBhekl2SWdoYVRDSlk2ekFkRTNsX294LWxEMWQzZjl5SWE4cHBIMjRBZ2xHUXRVdXl1Mnl2amNXT183NnRSUG9Na0pGVzJfVTg2QzZTUFVoVDBrM0FNRmNkbVhDRDNTdHhqeFBiUFBfc05aVjZHRUZ1NDZNUWUtSG5qaEtFeW52VGJYZ2RKYUpJZkcyY2M5aUJoVV9wRUtNYkdKaEV0THc1OGFGaWFGU3VJU2YwRW1MUnRXV29ubHlhWE9VcVhyRlFCeEZpb0hhQnFfbXBxVC1jdWJDUlFhVWJSQnRxeVJLbzhOTGFlSjZtSnZ3TjBQN2hQQXNPSXNMbkZCbkowdng5X3lhQkp3ZkhvWWgzN2ZjNEFPVFpZQk9USHVReGhNSTN3Y2JxRUluT3Vabko5T1FTbTV0QlE4T2cyQ0xjQjFPX0NfbHhvM0k0YUZ0RXdDVEtGaC1jU2daMGhOSEdnTTh3bVFDSGJGNjZBVUxHY2paRlQwS1hTanFZazROTVhJX2ZleE4tU0JFZHVTQ09LWE1nZ2xJNG9NbEthS3ZMQnJsLUhCaXdFLm5FaG5MNTRfT3U0YXM0TXBFWWZZS25NSmVkUmY5YXVjakRIVUxfOUdnMUx1dXFDNU9hZkRFWUFLdi1qejF4S2lJT1ZCcXVERmdxNGVqT05kb2hWdXhB"/><input type="hidden" name="_eventId" value="submit"/><input type="hidden" name="geolocation"/><p>
+                            <input type="hidden" name="service" value="https://tis.sustech.edu.cn/cas"/><input type="hidden" name="username" value="12111728"/><input type="hidden" name="password" value="Yang4399"/></p>
+                    </section>
+
+                    <span>
+            <button class="mdc-button mdc-button--raised"
+                        name="submitBtn"
+                        type="submit"
+                        accesskey="l">
+                    <span class="mdc-button__label" >登录</span>
+                </button>
+            </span>
+    </form>
+
+                <hr class="my-4" /><div id="pmlinks" class="my-2">
+    <form class="d-inline-block" method="post" id="passwordManagementForm">
+        <input type="hidden" name="execution" value="1044f98a-7abd-4865-8360-1839916892ed_ZXlKaGJHY2lPaUpJVXpVeE1pSXNJblI1Y0NJNklrcFhWQ0o5LmM4VHNmUldhNGc0UWRtbHRReWk5bFVkN0JHZzhDRDJWZDhhYVJZSTRvdk9vMEtJVmhiWlA2em8zaWhYWVF6MEo4TjRTVUFSd2txTG5mZ1UxbVg0eFY1R3dXS1VfRnM1Y1FwZDctc2UtYlN4ck12U0NXRHB1Y1dqTzVOek1Pd0ZDMExDNzN1RVFSb0xnMXFKSWNhSnRpSFIybENhZEhPUnJJdUFKVzRyMzRNM1p2b0hVclYzU0RMcDdwVDdoVjc3ejZVYnF1S1VXeHh5cUpQcVE1Y1R3ZG8zOVBucmxQYkNVeEpuaUgwNTZoN1hFNVNRZVhqZHZnckFBZjJoTXdiZVNGUlQ5MUZlcU9vLUxIWjNnT0dENTJZSUtpWGR3U1czX1RGdzQweEdvbzBLazFsM1lBdlhIUUVVSEFfYl96MFRjMWgzM3dDTFJZazJqb1Y0SDRJU0h0U043VFpfbnlBbklDMlRQNXptSXJ6UGJLVWl4ZlhMb3hHaVNGUkphTGFjUm1pTnBodTg1cW5MZ3RsM1Fnb3BQUi0yR21vb3BqNjlqM1J4VnNrRHJrVFNobDdDNE41NW1NaW1SZjJPb1I0WGZ6dUNnNTZjRTRPUHprUk00VV8xX0djNkdCdVhONjZQVWV2MXZISlJPMjlRUllacFFGY2J5NHhleWZlcDNyWTlOZmxudENJcTJhU19RYU9ETnZ3d1dldzBxNUFSRHFRbFdtOGl0b2xrUmtxYXVXcHFXMlJmVmJlMDhuVjhFeHVwNEk3Mlg5Q3NKV1lDZjRyLVFpY1lXS0psQ1FaenNJYWVmQTVrWHNHNGhLNWp6dXg4YVI4VkdQNnlyT1drQ2hpb1owQXNqTjhVNHdTZGtGXzhoQ0FhYWpDQ2hmWlRPeXNJOXoxRnRQcUhXX1lxT2Zkb2lqUUFuSm9UaGlCTFRhdWVWTzdSZVhwNm5GeGFUaXY3ZHk1eWRnQXNXandoSDM5dk1iOXhJdXJCUFl6MUdxOV96QmtDTmFKa0s4Q2VhRENuT3l1UFNQRkw2M18zT0NNY01MbV9TZjRXaUwtdWlrbDZWeGY5czljcHNJYnhjN2JSbmJHcTQzbkQ4dFZCWXF4QVBOSWdKaEVnVFYyLWEyXzlWSTU1ZXFKRlp2OWhxamU1Vjh4YWFuVC1DdG1YbE1nbUs2X20xZzRjOUF1NXp4VEk4bXIzSUJSMmZRZGVvM0Z2bFRqYVZ4Q3RPdk15clY4bkM2NlhQekt2M2JqcFM1amRJSGExNTRuYlc0UHZpZk5rZTR6SGpTUWEtZkoxSGZ6emhKM2tLbHdSZ3V6WnJvckI4bkZUUWtZeXRNWnBkbzVWaHBmdVpzVnZXbUY3RHVadXQ3NUVJbWZKV0U1TERQZHozQll2TWRVd0toeXJPMkZDTnY2V3JQelg2U2VEZk9ubTFmRFhQeUlsQzRGVW5rRlhEaUZIVEVMc1dUcHdzM1M3RTZVbnBRclRBV0huSTJDT0syazNvNklGWlFfN1FaSUdDd3NfY1pjTkRBeU0xS0xGUURjek1uQ2ZIcENYVmUwWnFfMU1pVnY5NlZqdkFMQlRHZEIyMWVrODRXTWpnWXk0U0JGclJ4cHY3Z0ZOMjNfSW1UYXRDS1kzU3Q4N1ViS0xPdjRJbkk0d0xfZkIydFR6b0I0THkwcUM5NzV2MVJLYUtrYUphb3kxRWVDUDk2dnFwQU1yUm02UXN3MEFRT1g2WS1fQkNtdUxDazA2dUlNUFdkb1dGQmtRRFg4UENWM3hjWElNTnhwd0cxZFAwM3VEejZYdS1zajNaZGl5SEFlOHgzTXJiQTFYbjI2TnRUcEwtUHdZZEdLTHB0NmVacHh3bFpDeUgxdXBtTlRDYmI0cndqb19jaGpxMUtPZDFvc2hQMmxYQUhWQ3ZTSmNfckdSX3p6VVI0bEpSSnlFM3EtZmtrMjNST2o2aVlnYXBWd0FuMkxWUHAzZXhiWE9qSzg3MmJHTU03Z2tFeXlKZ1lBai16bTRMOVZnNVB6WGc2NDFlNUcyc2lONXd0eUdpX2VzUmZCTEdPN0VLMk1iS21Gel9SVlN5ZWRKVGtwdTJTak5XZThCZUxuNmpEemFVajdHc0ZlV2ZCOG1QMXl6dUZjdlZHWXFyUUhmMjg2OWYwYWJHMVZCa1lKWjZZbkJaY3dzSE91QVpFdDFPemIwa3pMNlVxWEdkdFFxLS1UVTFxeVN0TmRiVGN0TzFtalh0NEpmYTRENjVxZ3djRHRiemE0VV9uSDNFTC0tamNqMGk0OGZrUEUwNWg5eUVWZlM0NWNfMk9IakVCb3lFTVM2bW1CbC10WUxuY3lRdUFXczJPS0FvczVnUEZNSVVFcnBiRld2RWNUMC00OUhRampibzFZZ0FhSkVEYzdFU1Q5UU12amUtMERtOC1VUFZsSWNHZjRxakpIQzFWWlljbUFXd0xVTXJjWXJmbjJIZ293UzdzWUdtVVFKQUg1N1BTdTExNThMMVVaSEFwUG0xODVNWjlJMEU2R2R3NGk1OEtFZ2Zxek9SbFBGeUJIUVdKV3ROSVdQeWVHUU5OLURhNEFjMFIwaFB6cmwzN0tIN19iZ0NoS25XeFhUM0lOSkxsOHBnODB6NVhzaUdFX1lDeHVtVTVlQlhfeGZMYk5sVjdPQThScFpYRXRUX3lObWNZQXZreXVPS0tfYzFHQzhXY3NIRVdoN2F5alJNVkF5bm1DaEFCdGdQSUV3R2ZvUHRFZ1ZLaUdwcEhqcUFhbFVzTmZKeFd6UktnNlNKX245dEQyamhXQ2g0MTd5bTFEMnFJYnZNMndkOWVBNkNrTnNQTW1OaElnRDZpMU9hcHZhREJKVU9pMUxpQ0NIRkZxeHl2VS1FeWdHTkFxQXRKdTlfREZnby1SNkdtQjRUMkdmYWNSOGhyR1k3TnZOVlJDS1hFRmg4YWVhR1Y2ZHdSLTkwLTBSRTZRQ1VpTFFlci1qUnhvX3dmRGVHc3hOLUNicFhsM3Nsd1ZaWVNQcXRqTVZ3eW42dFZ0Z3E3ZmdYeEVQY1VPbUVOQTcwNy1yZ2phVHktQ1Z5enZhQ1hvR2ZtM3VvYVhkYlRyc1IwQlREUHRqSzFNMTZOTE91U2ZtSVB0OFhoUHVBVWlqeUdBQ0ZVMFNFczJqWHB5ZExkMXU1VnViM3dYMjZGNnpxOEdPNzlUUnBNak5DOXYxb2JsWUlvd2lya1pyRFdRUEk3N29yaFo3T0MzbjZOQmprVk11WWRlcmNLaUUxNVBnMzdqaWRlcC10aEFkV2RzYlRiZXFTMTBvd1FjUmZENGM5Qkd4YWdGNUZjQTBMMGtTQVFyUWZxM3pvQWFoNWdnZnpaUnZMd0ZBZnRtUTFialdZYVdoUk9COVRlN3hSTS03TGtJZjhBeUJmSzhwa19XQlZ2a1ZWNVctbXJOR3h5X0JKeWwtbEViY1Q0OHFkOVQ5Q0ZHUjNTTDFIdG9CbEQyOTJhX0V1ZUhjZzZackU2dzB1QjRmamxjOFdHQnhtcGFMem9IOXFyTzZYUjA2WTBjcEVGUnp4eFdxUHlzUURSX3lVUFo5S1R1NTZTQUhIM2hWMlBmVEUtUVEzWXU4UGZjTGlIelM5VDNMLUZBalJVV2ZFVGhnZWRWSWpNcHp3VWJvTFk0YmxnenpVOXYtUVM1R2x0bDh2aXdPMEtJcWIwLVNHdEF3eWdxT1ZndzVaWkl6WkFGa3UyRzVuVkp5ZnZkbmwyY0ExYmJuc2JxLW1HMDBSbXdNa0xsRmY4QWxjZDhhWFhfdXZDbTIyczdmSnJaMmdCNVUxNVlFVG5fczAwY1B6NXJrbUg1TGIyY091dlJ5UnZJZ29WdHloQXd1NTNSbHBEM1RNWjAyRTh3V3VVS0Z0aDBjUkhpRFBIRlRxcWotM3QtZUs5U056SmprR0VGQ3lPdVRVWjNuaU1qMGNMZUs1NGpfTzZOelRDZEVwS3YwOEhGZlhRQTdZQ3FFZEJqbEF4SW1DT3JjVFN5R1kzWWZuZ3J3LXIwZTlzcWZ6NWx2TEY1V2JCbWg2bEI0eHpKNFNoY2hFMmhnX2VQS1FBMHgtUm5nQ0YxWUFGazc5bFNNUHpoRGFBUFp4S0ZKeTZHY3JoVjFKVE5lTXNJZ016ZnNLMDNVSGp5WDRzYnJKU0dHWmM1Y0lLYTVCb0x5TmdBWGpWbjlqVWxxTi0xWjBZbjlYeENfTVBTLWoweXVzWVI5amdidC1TWi1HMlN0dkZrMm00U3oyWlJ0OXF3c1NoSDhfY0N4cWt1Z3F4WmpFRWZrN2o2eHVKYWpMaHR5VjVfVWF0aWpkR2Jnc0M3b21KTGljcGpnRV9KMHFWUGM5QXNYQVotdWxlaWhTOE54MXotdmpnRmZpTUJ5TkthdXE1dzVqMEpnbF9hQWFmNUpQeW5qSVhMZFlTRzlsT3Z2OFVBVDY1LUVIdXB2RXhGbzZfQUlCY0F4bFBQc0duVmdCLUkyRmhtZXZQZzV5YWxaZWxFdU53LW5Tc2hNNkhMdThtSGEyODFmenF5QTdxSmoyWThnWnA3R2l5dnQ2WEYtY1p5djMwS29TQVhXeEQ0NkJIb3JZckJCdHpNclYzTkUxRjJwUDV6RVRLSWpnMjZmN25ObUJhaHliRWJPTWZMdGVqZXRJVUp3SmhPQlBqWFdTZDFMQ3pNQS1vb0Uyd2o3UFhreV9EYTJnZUhyVGFlYjZtclE2SVFlT1g2NUJaUi16X1FfeV9mZUVENWlES1RLTkF6Rl9Gck9wRzlxaHkxaVJwNnUwdTZRc1RDVXUwWFBVUFNla0xYeXBwVHFWbjUzTlhFaXRIMUdYclNkcTJ5V2VTSmdHUnZuT2k5Q29aR2pOUXU5V3o2SGpLYU84bkhsNzdfRVIzU2haTlVSdDlxR3VxV0tVV20xQ2Q1ZUw3MHN1ZjZrUGhYWWFkMUxYb3l5YmY3WVd4aXo0bWgzclJOUW1fRU5MZTB2OGtNekJCOHF0dHk4MkpjRkNkaFBmVHIxaTNlNmMtaWtZUlhQZWMyMUV6azh3cVRkMWp0WnNaVUlqWEJaSkhJR05HYlZsRTIxajBZbGhSLUdhVzFpeUlCdlR5ZzJNTVJNUWZRckN2NGVCOXBhekl2SWdoYVRDSlk2ekFkRTNsX294LWxEMWQzZjl5SWE4cHBIMjRBZ2xHUXRVdXl1Mnl2amNXT183NnRSUG9Na0pGVzJfVTg2QzZTUFVoVDBrM0FNRmNkbVhDRDNTdHhqeFBiUFBfc05aVjZHRUZ1NDZNUWUtSG5qaEtFeW52VGJYZ2RKYUpJZkcyY2M5aUJoVV9wRUtNYkdKaEV0THc1OGFGaWFGU3VJU2YwRW1MUnRXV29ubHlhWE9VcVhyRlFCeEZpb0hhQnFfbXBxVC1jdWJDUlFhVWJSQnRxeVJLbzhOTGFlSjZtSnZ3TjBQN2hQQXNPSXNMbkZCbkowdng5X3lhQkp3ZkhvWWgzN2ZjNEFPVFpZQk9USHVReGhNSTN3Y2JxRUluT3Vabko5T1FTbTV0QlE4T2cyQ0xjQjFPX0NfbHhvM0k0YUZ0RXdDVEtGaC1jU2daMGhOSEdnTTh3bVFDSGJGNjZBVUxHY2paRlQwS1hTanFZazROTVhJX2ZleE4tU0JFZHVTQ09LWE1nZ2xJNG9NbEthS3ZMQnJsLUhCaXdFLm5FaG5MNTRfT3U0YXM0TXBFWWZZS25NSmVkUmY5YXVjakRIVUxfOUdnMUx1dXFDNU9hZkRFWUFLdi1qejF4S2lJT1ZCcXVERmdxNGVqT05kb2hWdXhB" /><input type="hidden" name="_eventId" value="resetPassword" /><span class="fa fa-unlock"></span>
+        <a href="javascript:void(0)"
+           onclick="document.getElementById('passwordManagementForm').submit();" >忘记密码？</a>
+    </form>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    
+
+    </div>
+
+                <script type="text/javascript">
+                    /*<![CDATA[*/
+                    var i = "One moment please..."
+                    var j = "\u767B\u5F55"
+                        /*]]>*/
+                        $(window).on('pageshow', function () {
+                            $(':submit').prop('disabled', false);
+                            $(':submit').attr('value', j);
+                        });
+                    $(document).ready(function () {
+                        $("#fm1").submit(function () {
+                            $(":submit").attr("disabled", true);
+                            $(":submit").attr("value", i);
+                            return true;
+                        });
+                    });
+                </script>
+
+
+            </div>
+            <div id="sidebar">
+            <div class="sidebar-content">
+                <p>出于安全考虑，一旦您访问过那些需要您提供凭证信息的应用时，请操作完成之后<a href="logout">登出</a>并关闭浏览器。</p>
+            </div>
+        </div>
+        </div>
+            </section>
+            <section id="providers" class="login-section login-providers">
+                <div>
+            <!--                <h3 class="text-center mt-md-0 mt-4">--><!--                    <i class="fas fa-user-shield"></i>--><!--                    <span th:utext="#{screen.welcome.label.loginwith}">External Identity Providers</span>--><!--                </h3>--><div class="d-flex justify-content-center" style="display:block">
+                <ul class="list-unstyled d-flex flex-column m-0 flex-fill">
+                    <li class="p-1 login-provider-item">
+                        <div id="myTabContent" class="tab-content">
+                            <div id="weixin" style="height:405px;">
+                                <div align="center">
+                                    <h3 class="text-center">
+                                        &nbsp;
+                                        <!--<span th:utext="#{screen.wechat.login}">Wechat Login</span>-->
+                                    </h3>
+                                    <div class="impowerBox" style="width:280px;height:370px;display:block;">
+                                        <div id="qrcode" style="background-color:white;width:280px;height:280px;">
+                                            <div id="wx_after_warning" class="wrp_code_rl_mask" style="width:290px;height:290px;display:none">
+                                                <i class="status_icon icon38_msg error" style="margin-left:10px;margin-top:50px;"></i>
+                                                <h3>二维码已过期</h3>
+                                                <p>您可尝试刷新页面后再次扫码登录</p>
+                                                <button style="cursor: pointer;border-radius: 2px;border: 1px solid #AAA;min-width: 24px;height: 24px;padding: 0 12px;background: #F5F5F5;" onclick="window.location.reload()" ><span>刷新</span></button>
+                                            </div>
+                                            <div id="wx_after_cancel" class="wrp_code_rl_mask" style="width:290px;height:290px;display:none">
+                                                <i class="status_icon icon38_msg warn" style="margin-left:10px;margin-top:50px;"></i>
+                                                <h3>您已取消此次登录</h3>
+                                                <p>您可以刷新页面后再次扫码登录</p>
+                                                <button style="cursor: pointer;border-radius: 2px;border: 1px solid #AAA;min-width: 24px;height: 24px;padding: 0 12px;background: #F5F5F5;" onclick="window.location.reload()" ><span>刷新</span></button>
+                                            </div>
+                                        </div>
+                                        <div class="info">
+                                            <div class="status status_browser js_status" id="wx_default_tip"><p>请使用微信扫描二维码登录</p></div>
+                                            <div class="status status_succ js_status" style="display:none" id="wx_after_scan"><i class="status_icon icon38_msg succ"></i><div class="status_txt"><h4>扫描成功</h4><p>请在企业微信中点击确认即可登录</p></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script src="/cas/js/easy.qrcode.js"></script>
+                            <script>
+                                var uu = "clientredirect?client_name=Wework\u0026service=https%3A%2F%2Ftis.sustech.edu.cn%2Fcas";
+                                $.get(uu, {
+                                }, function(data) {
+                                    var temp = eval(data);
+                                    var timer = null;
+                                    var options = {
+                                        text: temp.url,
+                                        width: 280,
+                                        height: 280,
+                                        colorDark : "#000000",
+                                        colorLight : "#ffffff",
+                                        correctLevel : QRCode.CorrectLevel.L, // L, M, Q, H
+                                        dotScale: 0.7,
+                                        timing: '#000000',
+                                        logo:"/cas/images/wecom.png",
+                                        logoWidth:50,
+                                        logoHeight:50
+                                    }
+                                    new QRCode(document.getElementById("qrcode"), options);
+                                });
+                                // function showWechatQR(){
+                                timer = window.setInterval(showalert, 5000);
+                                changeStatus("default");
+                                // }
+                                function showalert() {
+                                    $.get("?client_name=Wework&wechat=check", {
+                                    }, function(data) {
+                                        var temp = JSON.parse(data);
+                                        if(temp.status == "confirm"){
+                                            clearInterval(timer);
+                                            var form = $('<form id="pac4jLogin" action="" method="post">'+
+                                                '<input name="client_name" value="'+temp.client_name+'">'+
+                                                '<input name="state" value="'+temp.state+'">'+
+                                                '<input name="code" value="'+temp.code+'">'+
+                                                '</form>');
+                                            $('body').append(form);
+                                            form.submit();
+                                            //window.location.replace(temp.redirect);
+                                        }else if(temp.status == 'cancel'){
+                                            clearInterval(timer);
+                                            changeStatus(temp.status);
+                                            window.event.returnValue = false;
+                                        }else if(temp.status == 'scan'){
+                                            changeStatus(temp.status)
+                                        }else if(temp.status =='warning'){
+                                            clearInterval(timer);
+                                            changeStatus(temp.status)
+                                        }
+                                    });
+                                }
+                                function changeStatus(status){
+                                    if(status === 'cancel'){
+                                        $("#wx_default_tip").hide();
+                                        $("#wx_after_scan").hide();
+                                        $("#wx_after_cancel").show();
+                                        $("#wx_after_warning").hide();
+                                    }else if(status === 'scan'){
+                                        $("#wx_default_tip").hide();
+                                        $("#wx_after_scan").show();
+                                        $("#wx_after_cancel").hide();
+                                        $("#wx_after_warning").hide();
+                                    }else if(status === 'default'){
+                                        $("#wx_default_tip").show();
+                                        $("#wx_after_scan").hide();
+                                        $("#wx_after_cancel").hide();
+                                        $("#wx_after_warning").hide();
+                                    }else{
+                                        $("#wx_default_tip").show();
+                                        $("#wx_after_scan").hide();
+                                        $("#wx_after_cancel").hide();
+                                        $("#wx_after_warning").show();
+                                    }
+                                }
+                            </script>
+                        </div>
+                        <!--<iframe th:if="${entry.name == 'Wecom'}" th:src="@{${entry.redirectUrl}}" width="100%" height="400px" frameborder="0"></iframe>--></li>
+                    </ul>
+            </div>
+        </div>
+        <script>
+            var redirectTo = $("a[autoRedirect=true]").attr("href");
+            if (redirectTo != null && redirectTo != undefined) {
+                window.location.href = redirectTo;
+            }
+        </script>
+    </section>
+<!--            <section id="acceptto" class="login-section login-qr d-xs-none d-md-block" th:if="${accepttoApplicationId}">--><!--                <div th:replace="fragments/accepttoQRCode :: accepttoQRCode">--><!--                    <a href="fragments/accepttoQRCode.html">accepttoQRCode</a>--><!--                </div>--><!--            </section>--></div>
+    </div>
+    </main>
+</div>
+
+<footer class="py-4 d-flex justify-content-center cas-footer">
+    <div id="copyright" class="mr-2 d-inline-block">版权所有 &copy; 2020 南方科技大学 （支持电话:88010777）</div>
+</footer>
+
+</body>
+</html>
