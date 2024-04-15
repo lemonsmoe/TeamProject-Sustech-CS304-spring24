@@ -19,11 +19,5 @@ def main():
             print(f'正在将{year}年{sem.name}课程信息插入数据库')
             insert_excel_data(f"CourseData/{year}{sem.name}.xlsx")
 
-
-    # get_Course_json(year, sem)
-    # course_data, headers = analyze_Course_json(year, sem)
-    # os.remove(f'CourseData/{year}{sem.name}.json')
-    # build_excel(course_data, f"CourseData/{year}{sem.name}.xlsx", headers=headers)
-
 if __name__ == '__main__':
     main()

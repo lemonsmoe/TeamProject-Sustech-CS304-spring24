@@ -22,10 +22,6 @@ CORS(app)  # 启用跨域支持，允许所有源
 
 def print_info():
     print()
-    print('-' * 50)
-    print('请在浏览器中打开 http://127.0.0.1:5000 查看网页')
-    print('在网页中输入必要信息后，点击确认按钮，即可开始选课')
-    print('-' * 50)
 
 @app.route('/')
 def home():
@@ -47,9 +43,6 @@ def handle_submission():
     data['keywords'] = list(filter(lambda x: x != '', data['keywords']))
     data['keywords'] = list(filter(lambda x: x != '-', data['keywords']))
     data['badwords'] = list(filter(lambda x: x != '', data['badwords']))
-    # print(data)
-    # 单独开一个线程运行选课程序
-    # def run_schedule():
     global scheduler
     scheduler = Client_Schedule(data=data)
     print_info()
@@ -70,13 +63,8 @@ def handle_submission():
 @app.route('/build_excel', methods=['POST'])
 def build_excel():
     print('正在生成Excel文件')
-
-    # thread = threading.Thread(target=run_print_dot)
-    # thread.start()
     scheduler.schedule2excel()
     response = {'status': 'success'}
-    # 销毁线程
-    # thread.join()
     return jsonify(response)
 
 @app.route('/api', methods=['POST'])
@@ -92,6 +80,3 @@ if __name__ == '__main__':
     print_info()
 
     app.run(debug=False,port=1314)
-
-
-# {'password': 'my father is YHT', 'student_name': '', 'keywords': ['系统', '视觉'], 'badwords': [''], 'excluded_time': {'点': []}}

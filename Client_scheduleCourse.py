@@ -47,9 +47,6 @@ def Client_Schedule(input_path='Input/input.json', data: dict = None):
     # 开始计算排课方案
     scheduler.schedule_class(excluded_time=excluded_time)
 
-    # 将排课方案写入Excel
-    # scheduler.schedule2excel()
-
     return scheduler
 
 
