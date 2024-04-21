@@ -1,6 +1,6 @@
 from flask import jsonify, request, session
 
-from message_models import app, db, Admin, Tag, User, Message
+from BackEnd.assitant_models import app, db, Admin, Tag, User, Message
 
 """
 状态码 200 成功
