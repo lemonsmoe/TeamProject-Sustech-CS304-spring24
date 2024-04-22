@@ -1,15 +1,17 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
-import pymysql
+# import pymysql
 
 from datetime import datetime
 
 
 app = Flask(__name__)
+from flask_cors import CORS
+CORS(app)
 app_ctx = app.app_context()
 app_ctx.push()
 # app.config["SQLALCHEMY_DATABASE_URI"] = (
-#     "mysql+pymysql://root:81991889@127.0.0.1:3306/seproject"
+    # "mysql+pymysql://root:81991889@127.0.0.1:3306/seproject"
 # )
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + "./seproject.sqlite"
@@ -59,21 +61,62 @@ def drop_all_tables():
         conn.close()
 
 
+from datetime import datetime
+
 class Student(db.Model):
     __tablename__ = "student"
-    id = db.Column(db.Integer, primary_key=True)  # 主键
-    name = db.Column(db.String(64), nullable=False)  # 姓名
-    student_id = db.Column(db.String(16), nullable=False, unique=True)  # 学号，唯一标识
+    student_id = db.Column(db.String(16), nullable=False, unique=True, primary_key=True)  # 学号，唯一标识
+    password = db.Column(db.String(64), nullable=False)  # 登录密码
+    last_login_time = db.Column(db.DateTime, default=datetime.now)  # 上次登录时间
+    
+class StudentInfo(db.Model):
+    __tablename__ = "student_info"
+    student_id = db.Column(db.String(16), db.ForeignKey("student.student_id"), primary_key=True)  # 学号，唯一标识
     grade = db.Column(db.String(16), nullable=False)  # 年级
     major = db.Column(db.String(64), nullable=False)  # 专业
     hobbies = db.Column(db.String(256))  # 兴趣爱好，以字符串形式存储，可以是逗号分隔的多个兴趣爱好
 
 
+
 # 初始化数据库表
 def init_db():
-    # drop_all_tables()
+    # db.drop_all()
     db.create_all()
+
+
+from datetime import datetime
+
+def init_student_data():
+    # 初始化一些学生数据
+    students = [
+        {
+            "student_id": "12111728",
+            "password": "123456",
+            "last_login_time": datetime.now()
+        },
+        {
+            "student_id": "12111713",
+            "password": "123456",
+            "last_login_time": datetime.now()
+        },
+        {
+            "student_id": "12110323",
+            "password": "123456",
+            "last_login_time": datetime.now()
+         }
+    ]
+
+    # 将学生数据插入到数据库中
+    for student_data in students:
+        student = Student(**student_data)
+        db.session.add(student)
+    
+    # 提交更改
+    db.session.commit()
+
 
 
 if __name__ == '__main__':
     init_db()
+    # 调用初始化函数，初始化学生数据
+    init_student_data()
