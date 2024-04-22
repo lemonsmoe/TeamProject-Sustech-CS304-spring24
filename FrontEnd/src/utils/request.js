@@ -2,8 +2,9 @@ import axios from 'axios'
 
 // 创建可一个新的axios对象
 const request = axios.create({
-    baseURL: 'http://localhost:1314',   // 后端的接口地址  ip:port
-    timeout: 30000
+    // baseURL: 'http://localhost:1314',   // 后端的接口地址  ip:port
+    baseURL: 'http://10.16.229.0:5050',
+    timeout: 10000
 })
 
 // request 拦截器
@@ -25,6 +26,7 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(
     response => {
         let res = response.data;
+        res.status = response.status;
 
         // 兼容服务端返回的字符串数据
         if (typeof res === 'string') {

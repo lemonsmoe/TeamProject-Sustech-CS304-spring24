@@ -2,11 +2,11 @@
   <div style="height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #669fef">
     <div style="display: flex; background-color: white; width: 50%; border-radius: 5px; overflow: hidden">
       <div style="flex: 1">
-        <img src="@/assets/logo.png" alt="" style="width: 100%">
+        <img src="@/assets/nkd.jpg" alt="" style="width: 100%">
       </div>
       <div style="flex: 1; display: flex; align-items: center; justify-content: center">
         <el-form :model="user" style="width: 80%" :rules="rules" ref="registerRef">
-          <div style="font-size: 20px; font-weight: bold; text-align: center; margin-bottom: 20px">欢迎注册后台管理系统</div>
+          <div style="font-size: 20px; font-weight: bold; text-align: center; margin-bottom: 20px">欢迎注册使用南科大学术助手</div>
           <el-form-item prop="username">
             <el-input prefix-icon="el-icon-user" size="medium" placeholder="请输入账号" v-model="user.username"></el-input>
           </el-form-item>
@@ -17,8 +17,8 @@
             <el-input prefix-icon="el-icon-lock" size="medium" show-password placeholder="请确认密码" v-model="user.confirmPass"></el-input>
           </el-form-item>
           <el-form-item>
-<!--            <el-button type="info" style="width: 100%" @click="register">注 册</el-button>-->
-            <el-button type="info" style="width: 100%" @click="$router.push('/login')">注 册</el-button>
+           <el-button type="info" style="width: 100%" @click="register">注 册</el-button>
+            <!-- <el-button type="info" style="width: 100%" @click="$router.push('/login')">注 册</el-button> -->
           </el-form-item>
           <div style="display: flex">
             <div style="flex: 1">已经有账号了？请 <span style="color: #6e77f2; cursor: pointer" @click="$router.push('/login')">登录</span></div>
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-
+import request from "@/utils/request";
 export default {
   name: "Register",
   data() {
@@ -69,13 +69,17 @@ export default {
   },
   methods: {
     register() {
+      let body = {'student_id': this.user.username, 'password': this.user.password}
+      
+      
       this.$refs['registerRef'].validate((valid) => {
         if (valid) {
-          // 验证通过
-          this.$request.post('/register', this.user).then(res => {
-            if (res.code === '200') {
+          request.post('/general/register', body).then(res=>{
+            console.log(res)
+            if (res.code === 200) {
+              // console.log(res)
               this.$router.push('/login')
-              this.$message.success('注册成功')
+              this.$message.success(res.msg)
             } else {
               this.$message.error(res.msg)
             }
