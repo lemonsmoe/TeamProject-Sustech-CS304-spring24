@@ -69,13 +69,22 @@ class Student(db.Model):
     password = db.Column(db.String(64), nullable=False)  # 登录密码
     last_login_time = db.Column(db.DateTime, default=datetime.now)  # 上次登录时间
     
-class StudentInfo(db.Model):
+class StudentInfo(db.Model): # 给选课系统使用的表
     __tablename__ = "student_info"
     student_id = db.Column(db.String(16), db.ForeignKey("student.student_id"), primary_key=True)  # 学号，唯一标识
     grade = db.Column(db.String(16), nullable=False)  # 年级
     major = db.Column(db.String(64), nullable=False)  # 专业
     hobbies = db.Column(db.String(256))  # 兴趣爱好，以字符串形式存储，可以是逗号分隔的多个兴趣爱好
 
+class DDL(db.Model):
+    __tablename__ = "ddl"
+    ddl_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    student_id = db.Column(db.String(16), db.ForeignKey("student.student_id"), nullable=False)
+    course_id = db.Column(db.String(16), nullable=False)
+    ddl_time = db.Column(db.DateTime, nullable=False)
+    ddl_content = db.Column(db.String(256), nullable=False)
+    ddl_status = db.Column(db.String(16), nullable=False)
+    ddl_score = db.Column(db.Integer, nullable=False)
 
 
 # 初始化数据库表
@@ -119,4 +128,4 @@ def init_student_data():
 if __name__ == '__main__':
     init_db()
     # 调用初始化函数，初始化学生数据
-    init_student_data()
+    # init_student_data()
