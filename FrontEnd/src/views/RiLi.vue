@@ -94,7 +94,7 @@
     
     <!-- 查看某一天的日程安排表 -->
     <el-dialog :visible.sync="detail">
-      <el-message>
+      <el-message style="font-size: 20px;">
         <p>{{ date }} 日程安排</p>
       </el-message>
 
@@ -105,7 +105,7 @@
         <el-table-column
           prop="number"
           label="序号"
-          width="150"
+          width="100"
           :align="'center'">
           
         </el-table-column>
@@ -124,29 +124,29 @@
         <el-table-column
           prop="content"
           label="内容简介"
-          width="150"
+          width="200"
           :align="'center'">
         </el-table-column>
         
         <el-table-column
           label="操作"
-          width="150"
+          width="168"
           :align="'center'">
           <template slot-scope="scope">
             <el-button @click="handleEdit(scope.row)" type="text" size="small">编辑</el-button>
             <el-button @click="handleDelete(scope.$index, scope.row)" type="text" size="small">删除</el-button>
           </template>
         </el-table-column>
-        
       </el-table>
-      <el-button type="primary" @click="addList">添加新日程</el-button>
+
+      <el-button type="primary" @click="handleAdd">添加新日程</el-button>
       <el-button type="info" @click="quitDetail">完成</el-button>
     
     </el-dialog>
 
     
     <!-- 添加新日程 -->
-    <el-dialog :visible.sync="getmessage" width="600px">
+    <el-dialog :visible.sync="addmessage" width="600px">
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="开始时间">
           <el-input v-model="form.time"></el-input>
@@ -157,18 +157,16 @@
         <el-form-item label="内容简介">
           <el-input v-model="form.content"></el-input>
         </el-form-item>
-
       </el-form>
 
-      <el-button type="primary" @click="onSubmit" :align="'center'">立即创建</el-button>
-      <el-button type="info" @click="onCancel" :align="'center'">取消</el-button>
-
+      <el-button type="primary" @click="confirmAdd" :align="'center'">立即创建</el-button>
+      <el-button type="info" @click="cancelAdd" :align="'center'">取消</el-button>
     </el-dialog>
 
     <!-- 编辑日程 -->
     <el-dialog :visible.sync="editmessage" width="600px">
       <el-form ref="editForm" :model="form" label-width="80px">
-        <el-form-item label="开始时间1">
+        <el-form-item label="开始时间">
           <el-input v-model="editForm.time"></el-input>
         </el-form-item>
         <el-form-item label="活动名称">
@@ -177,12 +175,10 @@
         <el-form-item label="内容简介">
           <el-input v-model="editForm.content"></el-input>
         </el-form-item>
-
       </el-form>
 
       <el-button type="primary" @click="confirmEdit" :align="'center'">修改</el-button>
-      <el-button type="info" @click="onCancelEdit" :align="'center'">取消</el-button>
-
+      <el-button type="info" @click="cancelEdit" :align="'center'">取消</el-button>
     </el-dialog>
 
 
@@ -209,18 +205,12 @@ export default {
       asideWidth: '200px',
       collapseIcon: 'el-icon-s-fold',
       value: new Date(),
-      getmessage:false,
+      addmessage:false,
       editmessage:false,
       detail:false,
       date:'',
       row: {},
-      tableData: [{
-        number: '1',
-        time: '15:00',
-        name: '上课',
-        content: '简介',
-        
-      }],
+      tableData: [],
     }
   },
   mounted() {
@@ -236,26 +226,45 @@ export default {
       this.collapseIcon = this.isCollapse ? 'el-icon-s-unfold' : 'el-icon-s-fold'
     },
     chooseDay(date) {
+      // 查看详情
       this.$message({
         message: '选择的日期是: ' + date.day,
         type: 'success'
       })
-      this.getdetail()
+      this.detail = true
       this.date = date.day
     },
-    getdetail(){
-        this.detail = true
-    }, 
-    addList(){
-        this.getmessage = true
-    },
     quitDetail(){
-        this.detail = false
+      // 退出详情
+      this.detail = false
     },
+
+    handleAdd(){
+      // 添加日程
+      this.addmessage = true
+      this.form.time = ''
+      this.form.name = ''
+      this.form.content = ''
+    },
+    confirmAdd(){
+      // 确认添加（更新表格）
+      var list = {
+        number: this.tableData.length + 1,
+        time: this.form.time,
+        name: this.form.name,
+        content: this.form.content,
+        }
+      this.tableData.push(list)
+      this.addmessage = false
+    },
+    cancelAdd(){
+      // 取消添加
+      this.addmessage = false
+    },
+    
     
     handleEdit(row){
       // 编辑日程
-
       this.editmessage = true
       this.editForm.time = row.time
       this.editForm.name = row.name
@@ -263,6 +272,18 @@ export default {
       this.row = row
 
     },
+    confirmEdit(){
+      // 确认编辑（更新表格）
+      this.row.time = this.editForm.time
+      this.row.name = this.editForm.name
+      this.row.content = this.editForm.content
+      this.editmessage = false
+    },
+    cancelEdit(){
+      // 取消编辑
+      this.editmessage = false
+    },
+
     handleDelete(index, row) {
       // 删除日程
       this.tableData.splice(index, 1)
@@ -271,31 +292,7 @@ export default {
         item.number = index + 1
       })
     }, 
-    confirmEdit(){
-      // 确认编辑
-
-      this.row.time = this.editForm.time
-      this.row.name = this.editForm.name
-      this.row.content = this.editForm.content
-      this.editmessage = false
-    },
-    onSubmit(){
-      // 将新填写的数据添加到表格中
-      var list = {
-        number: this.tableData.length + 1,
-        time: this.form.time,
-        name: this.form.name,
-        content: this.form.content,
-        }
-      this.tableData.push(list)
-      this.getmessage = false
-    },
-    onCancel(){
-      this.getmessage = false
-    },
-    onCancelEdit(){
-      this.editmessage = false
-    },
+    
   }
 }
 </script>
