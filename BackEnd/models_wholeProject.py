@@ -79,12 +79,11 @@ class StudentInfo(db.Model): # 给选课系统使用的表
 class DDL(db.Model):
     __tablename__ = "ddl"
     ddl_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    student_id = db.Column(db.String(16), db.ForeignKey("student.student_id"), nullable=False)
-    course_id = db.Column(db.String(16), nullable=False)
+    student_id = db.Column(db.String(16), db.ForeignKey("student.student_id"), nullable=True)
+    course_id = db.Column(db.String(16), nullable=True)
     ddl_time = db.Column(db.DateTime, nullable=False)
     ddl_content = db.Column(db.String(256), nullable=False)
-    ddl_status = db.Column(db.String(16), nullable=False)
-    ddl_score = db.Column(db.Integer, nullable=False)
+    ddl_status = db.Column(db.String(16), nullable=True)
 
 
 # 初始化数据库表

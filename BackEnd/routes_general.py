@@ -1,6 +1,6 @@
 from flask import jsonify, request, session
 from datetime import datetime
-from assistant_models import app, db, Student
+from models_wholeProject import app, db, Student
 
 @app.route('/students', methods=['GET'])
 def get_students():

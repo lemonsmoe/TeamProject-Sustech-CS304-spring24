@@ -4,10 +4,10 @@ import time
 
 import numpy as np
 
-from Class.Class_Course import Course
-from Tool.Tool_Plan2Excel import write_schedule_scheme_to_excel
-from Tool.Tool_EncrytExcel import read_encrypt_excel
-from Tool.TempTool.Key_Info import excel_password
+from .Class_Course import Course
+from ..Tool.Tool_Plan2Excel import write_schedule_scheme_to_excel
+from ..Tool.Tool_EncrytExcel import read_encrypt_excel
+from ..Tool.TempTool.Key_Info import excel_password
 
 
 class Scheduler:

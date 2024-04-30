@@ -1,8 +1,8 @@
 import json
 import time
 
-from Class.Class_Scheduler import Scheduler
-from Tool.Tool_ClientAu import handle_authorization
+from .Class.Class_Scheduler import Scheduler
+from .Tool.Tool_ClientAu import handle_authorization
 
 student_name = "hqc"
 keywords = ["软件工程", "计算机操作系统", "创新实践II-01班", "人工智能", "计算机网络"]
@@ -16,7 +16,7 @@ if getattr(sys, 'frozen', False):
     excel_folder = os.path.join(sys._MEIPASS, 'CourseData')
 else:
     # The application is not frozen
-    excel_folder = './CourseData/'
+    excel_folder = './CourseRec/CourseData/'
 
 
 def Client_Schedule(input_path='Input/input.json', data: dict = None):

@@ -2,7 +2,7 @@ from flask import jsonify, request, session
 from datetime import datetime
 
 from CourseRec.Client_scheduleCourse import Client_Schedule
-from assistant_models import app, db, Student
+from models_wholeProject import app, db, Student
 
 @app.route('/courserc/submit_data', methods=['POST'])
 def handle_submission():
