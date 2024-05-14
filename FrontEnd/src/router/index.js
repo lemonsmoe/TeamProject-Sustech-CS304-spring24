@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import TopicDetail from '@/components/TopicDetail.vue';
 
 Vue.use(VueRouter)
 
@@ -42,6 +43,11 @@ const routes = [
     path: '/luntan',
     name: 'luntan',
     component: () => import('../views/LunTan.vue')
+  },
+  {
+    path: '/topic/:id',
+    name: 'TopicDetail',
+    component: TopicDetail
   }
 ]
 
