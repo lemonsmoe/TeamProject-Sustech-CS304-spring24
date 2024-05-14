@@ -84,3 +84,25 @@ def update_ddl():
         print(e)
         db.session.rollback()
         return jsonify(code=400, msg="更新失败")
+    
+@app.route('/calender/delete', methods=['POST'])
+def delete_ddl():
+    """
+    ex:
+    {
+        "ddl_id": 1
+    }
+    """
+    req_data = request.get_json()
+    ddl_id = req_data.get("ddl_id")
+    ddl = DDL.query.get(ddl_id)
+    if ddl is None:
+        return jsonify(code=400, msg="ddl_id 不存在")
+    try:
+        db.session.delete(ddl)
+        db.session.commit()
+        return jsonify(code=200, msg="删除成功")
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return jsonify(code=400, msg="删除失败")
