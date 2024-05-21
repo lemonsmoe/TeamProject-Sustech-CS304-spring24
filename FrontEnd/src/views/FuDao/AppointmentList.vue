@@ -56,34 +56,93 @@
   
           <el-main>
             <el-card style=" margin-bottom: 10px" >
-              <div slot="header" class="clearfix">
-                  <span>预约辅导</span>
-              </div>
-              <el-row>
-                <el-col :span="8">
-                    <el-card>
-                        <img src="@/assets/logo.png" alt="">
-                        <div></div>
-                        <el-button type="primary" @click="toAppointmentList">我的预约</el-button>
-                    </el-card>
-                </el-col>
-                <el-col :span="8">
-                    <el-card>
-                        <img src="@/assets/logo.png" alt="">
-                        <div></div>
-                        <el-button type="primary" @click="toTeacherList">我要预约</el-button>
-                    </el-card>
-                </el-col>
-                <el-col :span="8">
-                    <el-card>
-                        <img src="@/assets/logo.png" alt="">
-                        <div></div>
-                        <el-button type="primary">活动查询</el-button>
-                    </el-card>
-                </el-col>
+                <div slot="header" class="clearfix">
+                    <span>我的预约</span>
+                </div>
+
+                <el-form :inline="true" :model="query" class="demo-form-inline">
+                    <el-form-item label="辅导师姓名">
+                        <el-input v-model="query.teacher_Name" placeholder="请输入辅导师姓名"></el-input>
+                    </el-form-item>
+                    <el-form-item label="辅导师工号">
+                        <el-input v-model="query.teacher_ID" placeholder="请输入辅导师工号"></el-input>
+                    </el-form-item>
+                    <el-form-item label="辅导师学科">
+                        <el-input v-model="query.teacher_Subject" placeholder="请输入辅导师学科"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="onSubmit">查询</el-button>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="danger" @click="toMenu">返回</el-button>
+                    </el-form-item>
+                </el-form>
+
+                <el-table
+                  :data="tableData"
+                  stripe
+                  style="width: 100%; margin-bottom: 10px">
+                  <el-table-column
+                    prop="number"
+                    label="序号"
+                    
+                    :align="'center'">
+                    
+                  </el-table-column>
+                  <el-table-column
+                    prop="student_name"
+                    label="学生姓名"
+                    
+                    :align="'center'">
+                  </el-table-column>
+
+                  <el-table-column
+                    prop="teacher_id"
+                    label="老师编号"
+                    
+                    :align="'center'">
+                  </el-table-column>
+
+                  <el-table-column
+                    prop="teacher_name"
+                    label="老师姓名"
+                    
+                    :align="'center'">
+                  </el-table-column>
                   
-              </el-row>
+                  <el-table-column
+                    prop="phone_number"
+                    label="学生手机"
+                    
+                    :align="'center'">
+                  </el-table-column>
+
+                  <el-table-column
+                    prop="appointment_time"
+                    label="预约时间"
+                    
+                    :align="'center'">
+                  </el-table-column>
+
+                  <el-table-column
+                    prop="remark"
+                    label="备注"
+                    
+                    :align="'center'">
+                  </el-table-column>
+                  
+                  <el-table-column
+                    label="操作"
+                   
+                    :align="'center'">
+                    <template slot-scope="scope">
+                      <el-button @click="handleEdit(scope.row)" type="text" size="small">编辑</el-button>
+                      <el-button @click="handleDelete(scope.$index, scope.row)" type="text" size="small">删除</el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
                 
+
             </el-card>
             <!-- 三个按钮 第一个跳转到选择辅导师的列表 第二个跳转到预约信息 第三个跳转到心理咨询活动-->
             
@@ -99,6 +158,27 @@
           </el-main>
         </el-container>
       </el-container>
+
+      <!-- <el-dialog :visible.sync="addAppointment" width="600px">
+        <el-form ref="form" :model="form" label-width="80px">
+          <el-form-item label="姓名">
+            <el-input v-model="appointmentForm.name"></el-input>
+          </el-form-item>
+          <el-form-item label="职称">
+            <el-input v-model="appointmentForm.title"></el-input>
+          </el-form-item>
+          <el-form-item label="学科">
+            <el-input v-model="appointmentForm.subject"></el-input>
+          </el-form-item>
+          <el-form-item label="时间">
+            <el-input v-model="appointmentForm.time"></el-input>
+          </el-form-item>
+          
+        </el-form>
+
+        <el-button type="primary" @click="confirmAdd" :align="'center'">立即创建</el-button>
+        <el-button type="info" @click="cancelAdd" :align="'center'">取消</el-button>
+      </el-dialog> -->
   
     </div>
   </template>
@@ -123,28 +203,51 @@
           resource: '',
           desc: ''
         },
-        formInline: {
-          xueqi: '',
-          mingcheng: '',
-          yuanxi: ''
+        query: {
+          teacher_Name: '',
+          teacher_ID: '',
+          teacher_Subject: ''
         },
+        addAppointment: false,
+        // appointmentForm: {
+        //   // 学生姓名 老师编号 老师姓名 学生手机 预约时间 备注
+
+        //   student_name: '',
+        //   teacher_id: '',
+        //   teacher_name: '',
+        //   phone_number: '',
+        //   appointment_time: '',
+        //   remark: ''
+        // },
+        tableData:[],
         
         index: 0,
         scheme: {},
-        // 老师的信息
-
-        tableData: [
-
-
+        teacher_list: [
+          {
+            teacher_name: '张六',
+            teacher_title: '教授',
+            teacher_subject: '数学'
+          },
+          {
+            teacher_name: '李七',
+            teacher_title: '副教授',
+            teacher_subject: '物理'
+          },
+          {
+            teacher_name: '王八',
+            teacher_title: '讲师',
+            teacher_subject: '化学'
+          }
         ],
+        
+
       }
     },
     mounted() {
   
     },
-    
     methods: {
-      
       handleFullScreen() {
         document.documentElement.requestFullscreen()
       },
@@ -167,14 +270,23 @@
   
         })
       },
-  
-      toTeacherList() {
-        this.$router.push('/fudao/teacherlist')
+      toMenu() {
+        this.$router.push('/fudao')
       },
-      toAppointmentList() {
-        this.$router.push('/fudao/appointmentlist')
+      addAppointment() {
+        this.addAppointment = true
       },
-
+      confirmAdd() {
+        this.$message({
+          message: '创建成功',
+          type: 'success'
+        })
+        this.addAppointment = false
+      },
+      cancelAdd() {
+        this.addAppointment = false
+      }
+      
     }
   }
   </script>

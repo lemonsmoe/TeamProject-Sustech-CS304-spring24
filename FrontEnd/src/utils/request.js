@@ -25,8 +25,8 @@ request.interceptors.request.use(config => {
 // 可以在接口响应后统一处理结果
 request.interceptors.response.use(
     response => {
-        let res = response.data;
-        res.status = response.status;
+        let res = response;
+        // res.status = response.status;
 
         // 兼容服务端返回的字符串数据
         if (typeof res === 'string') {

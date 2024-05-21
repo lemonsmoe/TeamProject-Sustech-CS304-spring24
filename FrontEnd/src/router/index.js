@@ -42,7 +42,33 @@ const routes = [
     path: '/luntan',
     name: 'luntan',
     component: () => import('../views/LunTan.vue')
+  },
+  {
+    path: '/rili',
+    name: 'rili',
+    component: () => import('../views/RiLi.vue')
+  },
+  {
+    path: '/fudao',
+    name: 'fudao',
+    component: () => import('../views/FuDao/FuDao.vue')
+  },
+  {
+    path: '/pingjiao',
+    name: 'pingjiao',
+    component: () => import('../views/PingJiao.vue')
+  },
+  {
+    path: '/fudao/teacherlist',
+    name: 'teacherlist',
+    component: () => import('../views/FuDao/TeacherList.vue')
+  },
+  {
+    path: '/fudao/appointmentlist',
+    name: 'appointmentlist',
+    component: () => import('../views/FuDao/AppointmentList.vue')
   }
+  
 ]
 
 const router = new VueRouter({
