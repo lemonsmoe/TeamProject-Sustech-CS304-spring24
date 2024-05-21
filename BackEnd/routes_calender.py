@@ -1,31 +1,18 @@
 from flask import jsonify, request, session
 from datetime import datetime
 from models_wholeProject import app, db, DDL
+from sqlalchemy import inspect
 
 @app.route('/calender', methods=['GET'])
 def get_calender():
     ddls = DDL.query.all()
-    data = []
-    for ddl in ddls:
-        data.append({
-            "ddl_id": ddl.ddl_id,
-            "ddl_time": ddl.ddl_time,
-            "ddl_content": ddl.ddl_content,
-            "ddl_status": ddl.ddl_status or "未完成"
-        })
+    data = [dict((c, getattr(ddl, c)) for c in inspect(ddl).mapper.column_attrs.keys()) for ddl in ddls]
     return jsonify(data)
 
 @app.route('/calender/<student_id>', methods=['GET'])
 def get_student_calender(student_id):
     ddls = DDL.query.filter_by(student_id=student_id).all()
-    data = []
-    for ddl in ddls:
-        data.append({
-            "ddl_id": ddl.ddl_id,
-            "ddl_time": ddl.ddl_time,
-            "ddl_content": ddl.ddl_content,
-            "ddl_status": ddl.ddl_status or "未完成"
-        })
+    data = [dict((c, getattr(ddl, c)) for c in inspect(ddl).mapper.column_attrs.keys()) for ddl in ddls]
     return jsonify(data)
 
 @app.route('/calender/add', methods=['POST'])
