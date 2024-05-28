@@ -4,7 +4,8 @@ import axios from 'axios'
 const request = axios.create({
     // baseURL: 'http://localhost:1314',   // 后端的接口地址  ip:port
     baseURL: 'http://10.16.229.0:5050',
-    timeout: 10000
+    timeout: 10000,
+    withCredentials: true  // this will include cookies in requests
 })
 
 // request 拦截器

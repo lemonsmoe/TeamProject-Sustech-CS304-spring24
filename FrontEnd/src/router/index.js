@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -39,11 +40,6 @@ const routes = [
     component: () => import('../views/XuanKe.vue')
   },
   {
-    path: '/luntan',
-    name: 'luntan',
-    component: () => import('../views/LunTan.vue')
-  },
-  {
     path: '/rili',
     name: 'rili',
     component: () => import('../views/RiLi.vue')
@@ -54,11 +50,6 @@ const routes = [
     component: () => import('../views/FuDao/FuDao.vue')
   },
   {
-    path: '/pingjiao',
-    name: 'pingjiao',
-    component: () => import('../views/PingJiao.vue')
-  },
-  {
     path: '/fudao/teacherlist',
     name: 'teacherlist',
     component: () => import('../views/FuDao/TeacherList.vue')
@@ -67,8 +58,36 @@ const routes = [
     path: '/fudao/appointmentlist',
     name: 'appointmentlist',
     component: () => import('../views/FuDao/AppointmentList.vue')
+  },
+
+  //论坛
+  {
+    path: '/luntan',
+    name: 'luntan',
+    component: () => import('../views/LunTan/LunTan.vue')
+  },
+  {
+    path: '/topic/:id',
+    name: 'TopicDetail',
+    component: () => import('../views/LunTan/TopicDetail.vue')
+  },
+  //评教系统
+  {
+    path: '/pingjiao',
+    name: 'pingjiao',
+    component: () => import('../views/PingJiao/PingJiao.vue')
+  },
+  {
+    path: '/course-detail/:id',
+    name: 'coursedetail',
+    component: () => import('../views/PingJiao/CourseDetail.vue')
+  },
+  //thomas
+  {
+    path: '/thomas',
+    name: 'thomasTest',
+    component: () => import('../views/XuanKe-thomas.vue')
   }
-  
 ]
 
 const router = new VueRouter({

@@ -76,7 +76,7 @@ export default {
         if (valid) {
           request.post('/general/register', body).then(res=>{
             console.log(res)
-            if (res.code === 200) {
+            if (res.status === 200) {
               // console.log(res)
               this.$router.push('/login')
               this.$message.success(res.msg)
