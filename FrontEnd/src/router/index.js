@@ -27,22 +27,22 @@ const routes = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('../views/Login.vue')
+    component: () => import('../views/General/Login.vue')
   },
   {
     path: '/register',
     name: 'register',
-    component: () => import('../views/Register.vue')
+    component: () => import('../views/General/Register.vue')
   },
   {
     path: '/xuanke',
     name: 'xuanke',
-    component: () => import('../views/XuanKe.vue')
+    component: () => import('../views/XuanKe/thomas.vue')
   },
   {
     path: '/rili',
     name: 'rili',
-    component: () => import('../views/RiLi.vue')
+    component: () => import('../views/RiLi/RiLi.vue')
   },
   {
     path: '/fudao',
@@ -82,12 +82,13 @@ const routes = [
     name: 'coursedetail',
     component: () => import('../views/PingJiao/CourseDetail.vue')
   },
-  //thomas
+  // 管理员
   {
-    path: '/thomas',
-    name: 'thomasTest',
-    component: () => import('../views/XuanKe-thomas.vue')
-  }
+    path: '/guanli',
+    name: 'guanli',
+    component: () => import('../views/GuanLi/GuanLi.vue')
+  },
+  
 ]
 
 const router = new VueRouter({

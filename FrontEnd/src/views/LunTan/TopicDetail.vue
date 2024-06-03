@@ -1,122 +1,207 @@
 <template>
-  <div>
-    <el-container>
-      <el-header style="height: 60px; line-height: 60px; display: flex; align-items: center; box-shadow: 2px 0 6px rgba(0, 21, 41, .35);">
-        <el-button @click="goBack" icon="el-icon-arrow-left">返回</el-button>
-        <i :class="collapseIcon" @click="handleCollapse" style="font-size: 26px"></i>
-        <div style="flex: 1; display: flex; justify-content: flex-end; align-items: center">
-          <i class="el-icon-quanping" @click="handleFullScreen" style="font-size: 25px"></i>
-          <el-dropdown placement="bottom">
-            <div style="display: flex; align-items: center; cursor: pointer">
-              <img src="@/assets/logo.png" alt="" style="width: 40px; height: 40px; margin: 0 5px">
-              <span>管理员</span>
-            </div>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>个人信息</el-dropdown-item>
-              <el-dropdown-item>修改密码</el-dropdown-item>
-              <el-dropdown-item>退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
-      </el-header>
+  <Layout>
+    <el-main>
+      <el-card style="margin-bottom: 10px">
+        <!-- <div slot="header" class="clearfix"> -->
+          <div class="back_button">
+            <el-button type="text" @click="goBack">返回</el-button>
+          </div>
+          <!-- <span>学习论坛</span> -->
+        <!-- </div> -->
 
-      <el-main>
-        <el-card style="margin-bottom: 10px">
-          <div slot="header" class="clearfix">
-            <span>学习论坛</span>
+        <!-- 标题和正文部分 -->
+        <el-card class="topic-detail-card">
+          <h1 class="topic-title">{{ topic.title }}</h1>
+          <div class="topic-meta">
+            <span class="topic-board">{{ topic.board }}</span> | 
+            <span class="topic-topic">{{ topic.topic }}</span> | 
+            <span class="topic-author">作者: {{ topic.author }}</span> | 
+            <span class="topic-time">发表于: {{ topic.created_time }}</span> | 
+            <span class="topic-updated">最后更新: {{ topic.last_updated_time }}</span>
           </div>
-          <h1>{{ topic.title }}</h1>
-          <div class="forum-container">
-            <div class="topic-content">{{ topic.content }}</div>
-            <div class="comments-section">
-              <el-card v-for="comment in comments" :key="comment.id" class="comment-card">
-                <div class="comment-header">
-                  <img :src="comment.userAvatar" alt="User Avatar" class="user-avatar">
-                  <span>{{ comment.userName }}</span>
-                </div>
-                <div class="comment-body">{{ comment.text }}</div>
-                <div class="comment-footer">
-                  <el-button size="mini">评论</el-button>
-                  <el-button size="mini">回复</el-button>
-                </div>
-              </el-card>
-            </div>
-            <el-pagination
-              background
-              layout="prev, pager, next"
-              :total="comments.length"
-              :page-size="10">
-            </el-pagination>
-            <el-input
-              type="textarea"
-              placeholder="发表您的评论..."
-              v-model="newComment"
-              class="quick-reply">
-            </el-input>
-            <el-button type="primary" @click="postComment">发表评论</el-button>
-          </div>
+          <div class="topic-content">{{ topic.content }}</div>
         </el-card>
-      </el-main>
-    </el-container>
-  </div>
+
+        <!-- 评论区 -->
+        <div class="forum-container">
+          <div class="comments-section">
+            <el-card v-for="comment in comments" :key="comment.id" class="comment-card">
+              <!-- <div class="comment-header">
+                <img :src="comment.userAvatar" alt="User Avatar" class="user-avatar">
+                <div class="comment-head">{{ comment.student_id }}</div>
+              </div>
+              <div class="comment-body">{{ comment.content }}</div>
+              <div class="comment-footer">
+                <el-button size="mini">评论</el-button>
+                <el-button size="mini">回复</el-button>
+              </div> -->
+
+              <div class="comment-container">
+              <div class="comment-content">
+                <div class="comment-head">{{ comment.student_id }}</div>
+                <div class="comment-body">{{ comment.content }}</div>
+              </div>
+              <div class="comment-date">{{ comment.created_time }}</div>
+            </div>
+            </el-card>
+          </div>
+          
+          <el-pagination
+            background
+            layout="prev, pager, next"
+            :total="comments.length"
+            :page-size="10"
+            class="pagination-with-margin">
+          </el-pagination>
+          <el-input
+            type="textarea"
+            placeholder="发表您的评论...按下Ctrl+Enter快速发表"
+            v-model="newComment.content"
+            class="quick-reply"
+            @keydown.enter.ctrl.native="postComment">
+          </el-input>
+          <el-button type="primary" class="quick-reply" @click="postComment">发表评论</el-button>
+        </div>
+      </el-card>
+    </el-main>
+  </Layout>
 </template>
 
 <script>
+import Layout from '@/components/Layout.vue'
+import request from "@/utils/request"; // 确保你已经导入了request工具
+
 export default {
   name: 'TopicDetail',
+  components: {
+    Layout
+  },
   data() {
     return {
       topic: {
-        title: 'Example Topic',
-        content: 'This is an example topic content.'
+        title: '',
+        content: '',
+        board: '',
+        topic: '',
+        created_time: '',
+        last_updated_time: '',
+        author: ''
       },
-      comments: [
-        { id: 1, userName: '用户1', userAvatar: 'path/to/avatar1.jpg', text: '非常好的帖子！' },
-        { id: 2, userName: '用户2', userAvatar: 'path/to/avatar2.jpg', text: '非常有用的信息，谢谢分享。' }
-      ],
-      newComment: ''
+      comments: [],
+      newComment: {
+        post_id: this.$route.params.id,
+        content: ''
+      }
     };
   },
+  mounted() {
+    this.fetchTopicDetail();
+    this.fetchComments(); // 页面加载时获取评论信息
+  },
+  created() {
+    // 在组件创建后立即给当前帖子发送增加浏览量的请求 Thomas添加嘻嘻嘻
+    this.addView();
+  },
   methods: {
-    handleCollapse() {
-      console.log('Toggle sidebar');
+    addView() {
+      const topicId = this.$route.params.id;
+      request.post('/forum/post/addview', { post_id: topicId }).then(res => {
+        if (res.status !== 200) {
+          this.$message.error(res.data.msg);
+        }
+      }).catch(error => {
+        console.error("增加浏览量失败:", error);
+      });
     },
-    handleFullScreen() {
-      console.log('Toggle full screen');
+    fetchTopicDetail() {
+      const topicId = this.$route.params.id; // 获取路由参数中的话题ID
+      request.post('/forum/post/getcontent', { post_id: topicId }).then(res => {
+        if (res.status === 200) {
+          this.topic = res.data; // 将获取到的话题详情设置到topic
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      }).catch(error => {
+        console.error("获取话题详情失败:", error);
+      });
+    },
+    
+    fetchComments() {
+      const topicId = this.$route.params.id;
+      request.post('/forum/reply/get', { post_id: topicId }).then(res => {
+        if (res.status === 200) {
+          this.comments = res.data;
+        } else {
+          this.$message.error(res.data.msg);
+        }
+      }).catch(error => {
+        console.error("获取评论列表失败:", error);
+      });
     },
     postComment() {
-      if (this.newComment.trim() !== '') {
-        const newId = this.comments.length + 1;
-        this.comments.push({
-          id: newId,
-          userName: '新用户',
-          userAvatar: 'path/to/defaultAvatar.jpg',
-          text: this.newComment
-        });
-        this.newComment = ''; // Reset the input after posting
-        alert('评论已发表！');
+      if (this.newComment.content.trim() !== '') {
+        request.post('/forum/reply/put', this.newComment)
+          .then(res => {
+            if (res.status === 200) {
+              this.$message.success('评论已发表');
+              // 重置评论输入框
+              this.newComment.content = '';
+              // 重新获取评论列表
+              this.fetchComments();
+            } else {
+              this.$message.error(res.data.msg);
+            }
+          })
+          .catch(error => {
+            console.error("发表评论失败:", error);
+          });
       } else {
-        alert('请输入评论内容！');
+        this.$message.error('请输入评论内容');
       }
     },
     goBack() {
-    this.$router.go(-1);  // 返回前一个页面
-  }
+      this.$router.go(-1); 
+    }
   }
 };
 </script>
 
 <style scoped>
+.back_button {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.topic-detail-card {
+  margin-bottom: 20px;
+  padding: 5px;
+  border-radius: 20px;
+}
+.topic-title {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  margin-top: auto;
+}
+.topic-meta {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 20px;
+}
+.topic-content {
+  font-size: 16px;
+  line-height: 1.5;
+}
 .forum-container {
   width: 80%;
   margin: auto;
 }
-.topic-content {
-  font-size: 16px;
-  margin-top: 20px;
-}
 .comment-card {
-  margin-top: 20px;
+  /* 圆角边框 */
+  border-radius: 20px;
+  padding: 2px;
+  margin-bottom: 3px;
 }
 .comment-header {
   display: flex;
@@ -125,11 +210,15 @@ export default {
 .user-avatar {
   width: 40px;
   height: 40px;
-  borderRadius: 50%;
-  marginRight: 10px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.comment-head {
+  font-weight: bold;
+  margin-right: 10px;
 }
 .comment-body {
-  margin-top: 10px;
+  text-align: left;
 }
 .comment-footer {
   display: flex;
@@ -138,5 +227,17 @@ export default {
 }
 .quick-reply {
   margin-top: 20px;
+}
+.pagination-with-margin {
+  margin-top: 20px; 
+}
+.comment-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+.comment-content {
+  display: flex;
+  align-items: start;
 }
 </style>

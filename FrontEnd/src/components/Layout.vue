@@ -13,17 +13,15 @@
               <i class="el-icon-s-home"></i>
               <span slot="title">系统首页</span>
             </el-menu-item>
-            <el-menu-item index="/login">
-              <i class="el-icon-s-custom"></i>
-              <span slot="title">登录</span>
-            </el-menu-item>
+            
             <el-submenu index="2">
               <template slot="title"><i class="el-icon-menu"></i><span>学生应用</span></template>
-              <el-menu-item index="/xuanke">选课系统</el-menu-item>
+              <el-menu-item index="/xuanke">选课规划</el-menu-item>
               <el-menu-item index="/luntan">学习论坛</el-menu-item>
               <el-menu-item index="/fudao">预约辅导</el-menu-item>
               <el-menu-item index="/rili">学习日历</el-menu-item>
               <el-menu-item index="/pingjiao">评教系统</el-menu-item>
+              <el-menu-item index="/guanli" v-if="isAdmin()">管理员</el-menu-item>
             </el-submenu>
           </el-menu>
         </el-aside>
@@ -33,7 +31,7 @@
             <i :class="collapseIcon" @click="handleCollapse" style="font-size: 26px"></i>
             <div style="flex: 1; display: flex; justify-content: flex-end; align-items: center">
               <i class="el-icon-quanping" @click="handleFullScreen" style="font-size: 25px"></i>
-              <span>当前用户：{{current_student_id}}</span>
+              <span>{{'欢迎，' + current_student_id + '   你是：' + current_type}}</span>
               <el-dropdown placement="bottom">
                 
                 <div style="display: flex; align-items: center; cursor: pointer">
@@ -42,18 +40,17 @@
                   <span>用户中心</span>
                 </div>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>个人信息</el-dropdown-item>
-                  <el-dropdown-item>修改密码</el-dropdown-item>
                   <el-dropdown-item @click.native="handleLogout">退出登录</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
           </el-header>
-          <slot>
-
-            <!--  插槽用于装载不同模块的主要内容 -->
-      
-          </slot>
+          <!-- <div :style="{ backgroundImage: `url(${require('@/assets/cover.png')})`}"> -->
+            <slot>
+              <!-- 插槽用于装载不同模块的主要内容 -->
+            </slot>
+            <!-- <img src="@/assets/cover.png" alt="OpenZS Logo" style="width: 100%; height: auto"> -->
+          <!-- </div> -->
         </el-container>
       </el-container>
   
@@ -69,23 +66,34 @@
         isCollapse: false,
         asideWidth: '200px',
         collapseIcon: 'el-icon-s-fold',
-        current_student_id: ''
+        current_student_id: '',
+        current_type: '',
+
       }
     },
     mounted() {
   
     },
-    created() {
+    async created() {
     // 在组件创建后立即发送请求
-      this.getUser();
+      await this.getUser();
     },
     methods: {
+      isAdmin() {
+        return this.current_student_id === 'admin';
+      },
       getUser() {
         // 获取当前用户信息
         request.get('/general/current_student').then(res=>{
           console.log(res);
           if (res.status == 200) {
             this.current_student_id = res.data.student_id;
+            if (this.current_student_id === 'admin') {
+              this.current_type = '管理员';
+            }
+            else {
+              this.current_type = '学生';
+            }
             
           }
           else{
