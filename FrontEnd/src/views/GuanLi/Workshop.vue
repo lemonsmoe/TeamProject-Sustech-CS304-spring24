@@ -22,6 +22,12 @@
           </template>
         </el-table-column>
       </el-table>
+      <!-- 
+        AI-generated-content
+        tool: Copilot
+        version: latest
+        usage: 询问如何分页
+      -->
       <el-pagination
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
@@ -65,7 +71,12 @@
               
             ></el-date-picker>
           </el-form-item>
-
+          <!-- 
+            AI-generated-content
+            tool: Copilot
+            version: latest
+            usage: 询问如何选择时间段
+          -->
           <el-form-item label="课程时间">
             <el-select v-model="workshopform.time" placeholder="选择时间段">
               <el-option
