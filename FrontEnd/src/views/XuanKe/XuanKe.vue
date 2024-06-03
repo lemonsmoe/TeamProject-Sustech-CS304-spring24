@@ -119,8 +119,15 @@ export default {
       badwords: '',
       yuanxi: ''
     },
+
     days: ['', '周一', '周二', '周三', '周四', '周五', '周六', '周日'],
-     tableData: Array(6).fill().map((_, i) => ({
+    /**
+     * AI-generated-content
+     * tool: Copilot
+     * version: latest
+     * usage: 询问如何以简洁的代码生成表格
+    */
+    tableData: Array(6).fill().map((_, i) => ({
       0: `第${i + 1}节`,
       1: '',
       2: '',
