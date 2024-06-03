@@ -5,16 +5,32 @@ from models_wholeProject import app, db, Student
 import os
 import importlib.util
 
-@app.route("/index")
+def connect_db(db_type='sqlite'):
+    """
+    连接数据库
+    :param db_type: 数据库类型
+    :return:
+    """
+    
+    if db_type == 'sqlite':
+        print("sqlite")
+        import sqlite3
+        con = sqlite3.connect('./instance/course.sqlite')
+        cur = con.cursor()
+    else:
+        print("不支持的数据库类型")
+        return
+    
+    return con, cur
+
+
 @app.route("/hello")
 def hello_world():
-    return "hello world"
-
+    return jsonify({'message': 'Hello, World!'})
 
 def get_routes_info():
     routes_info = []
     current_directory = os.path.dirname(os.path.abspath(__file__))
-
     for filename in os.listdir(current_directory):
         if filename.startswith('routes') and filename.endswith('.py'):
             module_name = filename[:-3]  # 去掉 ".py" 后缀
@@ -29,52 +45,43 @@ def get_routes_info():
                         'endpoint': rule.endpoint,
                         'methods': list(rule.methods),
                     })
-
     return routes_info
 
-
-@app.route("/")
-def index():
-    # routes_info = get_routes_info()
-    # html = """
-    # <!doctype html>
-    # <html lang="en">
-    #   <head>
-    #     <meta charset="utf-8">
-    #     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    #     <title>Routes Information</title>
-    #   </head>
-    #   <body>
-    #     <h1>Routes Information</h1>
-    #     <table border="1">
-    #       <tr>
-    #         <th>Rule</th>
-    #         <th>Endpoint</th>
-    #         <th>Methods</th>
-    #       </tr>
-    #       {% for route in routes_info %}
-    #       <tr>
-    #         <td>{{ route.rule }}</td>
-    #         <td>{{ route.endpoint }}</td>
-    #         <td>{{ route.methods }}</td>
-    #       </tr>
-    #       {% endfor %}
-    #     </table>
-    #   </body>
-    # </html>
-    # """
-    # return render_template_string(html, routes_info=routes_info)
-# def hello_pzs():
-
-    # 扫描当前路径下带有routes_前缀的文件
-    routes = [i for i in os.listdir() if i.startswith("routes_")]
-    # 返回所有文件文本内容
-    html_text = "瞎几把写的东西"
-    for route in routes:
-        with open(route, "r", encoding='utf-8') as f:
-            contents = f.readlines()
-            html_text += "<br>" + '<br><br>'.join(contents) + "<br>"
-    return html_text
-
+@app.route('/')
+def list_routes():
+    routes = []
+    for rule in app.url_map.iter_rules():
+        methods = ','.join(sorted(rule.methods))
+        route_info = {
+            'endpoint': rule.endpoint,
+            'methods': methods,
+            'url': rule.rule
+        }
+        routes.append(route_info)
+    template = '''
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Routes</title>
+    </head>
+    <body>
+        <h1>All Routes</h1>
+        <table border="1">
+            <tr>
+                <th>Endpoint</th>
+                <th>Methods</th>
+                <th>URL</th>
+            </tr>
+            {% for route in routes %}
+            <tr>
+                <td>{{ route.endpoint }}</td>
+                <td>{{ route.methods }}</td>
+                <td>{{ route.url }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+    </html>
+    '''
     
-    return "这是Open籽肾的软工后端，请直接打开文件查阅相关API"
+    return render_template_string(template, routes=routes)

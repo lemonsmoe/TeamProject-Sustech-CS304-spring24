@@ -1,17 +1,39 @@
-import psycopg2
+# import psycopg2
 import pathlib
 
 from Tool.Tool_EncrytExcel import read_encrypt_excel
 from Tool.TempTool.Key_Info import excel_password
-def insert_excel_data(excel_path):
+
+def connect_db(db_type='postgres'):
+    """
+    连接数据库
+    :param db_type: 数据库类型
+    :return:
+    """
+    
+    if db_type == 'sqlite':
+        print("sqlite")
+        import sqlite3
+        con = sqlite3.connect('../instance/course.sqlite')
+        cur = con.cursor()
+    elif db_type == 'postgres':
+        pass
+        # 1.连接数据库
+        # con = psycopg2.connect(database="course", user="postgres", password="81991889", host="localhost", port="5432")
+        # # 2.创建游标
+        # cur = con.cursor()
+    else:
+        print("不支持的数据库类型")
+        return
+    
+    return con, cur
+
+def insert_excel_data(excel_path, db_type='postgres'):
     """
     将excel中的数据插入到postgres数据库中
     :return:
     """
-    # 1.连接数据库
-    con = psycopg2.connect(database="course", user="postgres", password="81991889", host="localhost", port="5432")
-    # 2.创建游标
-    cur = con.cursor()
+    con, cur = connect_db(db_type)
     # 3.读取excel文件
     df = read_encrypt_excel(excel_path, excel_password)
     # 4.获取需要创建的表名和字段名
@@ -45,9 +67,7 @@ def insert_excel_data(excel_path):
             cur.close()
             # 9.关闭连接
             con.close()
-            con = psycopg2.connect(database="course", user="postgres", password="81991889", host="localhost",
-                                   port="5432")
-            cur = con.cursor()
+            con, cur = connect_db(db_type)
             pass
 
         # 5.创建表

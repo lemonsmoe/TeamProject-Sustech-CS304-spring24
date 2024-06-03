@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Selection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/timetable.css') }}">
+
+</head>
+<body>
+    <!-- 放一个标题：排课系统 -->
+    <h1>Course Time Table</h1>
+<!--    <div id="info">after submission, here will show the courses you could pick for every keywords</div>-->
+    <div id="output-grid"></div>
+    <button id="get-scheme-button">get current table</button>
+    <button id="previous-page-button">previous</button>
+<!--    第几页-->
+    <span id="page-count">0</span>
+    <button id="next-page-button">next</button>
+
+<!--    <div id="output-grid"></div>-->
+
+<!--    信息显示栏-->
+    <script src="{{ url_for('static', filename='js/timetable.js') }}"></script>
+
+
+</body>
+</html>

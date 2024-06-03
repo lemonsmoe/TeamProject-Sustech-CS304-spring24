@@ -1,0 +1,198 @@
+:root {
+    --color: #fff;
+    --background-color: rgba(0, 0, 0, 0.59);
+    --background-color2: rgba(19, 1, 1, 0.75);
+}
+
+#schedule-grid {
+    display: grid;
+    grid-template-columns: 20px repeat(7, 1fr);
+    width: 40vw;
+    gap: 5px;
+    margin: 20px;
+    border: 1px solid var(--background-color);
+    border-radius: 5px;
+    padding: 10px;
+    background-color: var(--color);
+    box-shadow: 0 0 5px var(--background-color);
+    overflow: hidden;
+}
+
+.schedule-cell {
+    /* display: flex; */
+    /*width: 65px;*/
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(168, 255, 136, 0.75);
+    border: 1px solid var(--background-color);
+    cursor: pointer;
+    /*transition: background-color 0.05s ease;*/
+}
+
+.schedule-cell:hover {
+    background-color: rgba(82, 236, 28, 0.75);
+}
+
+
+.schedule-cell.selected {
+    background-color: rgba(232, 101, 101, 0.84);
+}
+
+.schedule-cell.selected:hover {
+    background-color: rgba(234, 29, 29, 0.84);
+}
+
+#solution-grid {
+    display: grid;
+    grid-template-columns: 120px 10px 200px;
+    /*行与行之间的间隔*/
+    grid-row-gap: 10px;
+    /*列与列之间的间隔*/
+    grid-column-gap: 10px;
+}
+
+
+button {
+    margin: 20px;
+}
+
+.schedule-cell-column-header, ouput-cell-column-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-color);
+    color: var(--color);
+    font-weight: bold;
+    cursor: pointer;
+}
+.schedule-cell-column-header:hover {
+    background-color: var(--background-color2);
+}
+
+.schedule-cell-row-header {
+    display: flex;
+    width: 20px;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-color);
+    color: var(--color);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.schedule-cell-row-header:hover {
+    background-color: var(--background-color2);
+}
+
+
+
+#course {
+    width: 40vw;
+}
+
+#exclude {
+    width: 40vw;
+}
+
+#submit-button, #build-excel-button, #next-page-button, #previous-page-button {
+    /*width: 50px;*/
+    height: 25px;
+    width: auto;
+    font-size: 15px;
+    font-weight: bold;
+    background-color: var(--background-color);
+    color: var(--color);
+    border: 1px solid var(--background-color);
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 1px;
+}
+
+#submit-button:hover {
+    background-color: var(--background-color2);
+}
+
+
+#build-excel-button:hover {
+    background-color: var(--background-color2);
+}
+
+#info{
+    float: right;
+    width: 30vw;
+    height: 70vh;
+    overflow: auto;
+    background-color: var(--color);
+    color: var(--background-color);
+    border: 1px solid var(--background-color);
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 0 5px var(--background-color);
+    margin-right: 10vw;
+    /*自动换行*/
+    word-wrap: break-word;
+}
+
+.course-name{
+    color: #d71b85;
+}
+
+#output-grid {
+    display: grid;
+    grid-template-columns: 20px repeat(7, 1fr);
+    width: 70vw;
+    /*height: 50vh;*/
+    gap: 5px;
+    margin: 20px;
+    border: 1px solid var(--background-color);
+    border-radius: 5px;
+    padding: 10px;
+    background-color: var(--color);
+    box-shadow: 0 0 5px var(--background-color);
+    overflow: hidden;
+}
+
+.output-cell {
+    /* display: flex; */
+    /*width: 65px;*/
+    height: 100px;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 253, 209, 0.75);
+    border: 1px solid var(--background-color);
+    cursor: pointer;
+    /*transition: background-color 0.05s ease;*/
+}
+.output-cell:hover {
+    /*每个格子的颜色可能不同，针对性的在原有的颜色上变深一点点*/
+    filter: brightness(0.8);
+}
+.output-cell-column-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-color);
+    color: var(--color);
+    font-weight: bold;
+    cursor: pointer;
+}
+.output-cell-column-header:hover {
+    background-color: var(--background-color2);
+}
+
+.output-cell-row-header {
+    display: flex;
+    width: 20px;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--background-color);
+    color: var(--color);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.output-cell-row-header:hover {
+    background-color: var(--background-color2);
+}
+

@@ -2,7 +2,7 @@ import json
 import time
 
 from .Class.Class_Scheduler import Scheduler
-from .Tool.Tool_ClientAu import handle_authorization
+# from .Tool.Tool_ClientAu import handle_authorization
 
 student_name = "hqc"
 keywords = ["软件工程", "计算机操作系统", "创新实践II-01班", "人工智能", "计算机网络"]
@@ -26,8 +26,8 @@ def Client_Schedule(input_path='Input/input.json', data: dict = None):
             data = json.load(f)
 
     # 判断是否有权限使用本程序
-    if not handle_authorization(data['password']):
-        return
+    # if not handle_authorization(data['password']):
+    #     return
 
 
     student_name = data['student_name']
@@ -50,12 +50,12 @@ def Client_Schedule(input_path='Input/input.json', data: dict = None):
     return scheduler
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    try:
-        Client_Schedule()
-    except Exception as e:
-        print(e)
-        print("程序出错了，怪我咯")
+#     try:
+#         Client_Schedule()
+#     except Exception as e:
+#         print(e)
+#         print("程序出错了，怪我咯")
 
-    time.sleep(60)
+#     time.sleep(60)

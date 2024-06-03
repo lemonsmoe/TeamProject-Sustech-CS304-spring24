@@ -33,8 +33,8 @@ class Course:
         通过正则表达式解析上课信息，得到上课时间
         """
         self.all_info = course_row
-        self.name = course_row["教学班"]
-        self.parse_time_info(course_row["上课信息"])
+        self.name = course_row[0]
+        self.parse_time_info(course_row[9])
         self.generate_np_time()
         
     def parse_time_info(self, time_info):

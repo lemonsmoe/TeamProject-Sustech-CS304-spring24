@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Selection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+</head>
+<body>
+    <!-- 放一个标题：排课系统 -->
+    <h1>Course UR so Hot</h1>
+    <div id="info">after submission, here will show the courses you could pick for every keywords</div>
+    <div id="schedule-grid"></div>
+
+    <div id="solution-grid">
+    <!-- 填写使用程序的密码 -->
+    <div>password</div> <div></div>
+    <input type="password" id="password" name="password" placeholder="ask your good dad" required>
+
+    <!-- 填写使用程序的用户名 -->
+    <div>username</div> <div></div>
+    <input type="text" id="username" name="username" placeholder="whatever you like" required>
+
+    <!-- 填写要选的课 -->
+    <div>keywords</div> <div></div>
+    <input type="text" id="course" name="course" placeholder="separated by space, one keyword represents one class" required>
+
+    <!-- 填写要排除的课 -->
+    <div>badwords</div> <div></div>
+    <input type="text" id="exclude" name="exclude" placeholder="separated by space, input those you don't want to be included" required>
+
+    <div>plan num</div> <div></div>
+    <span id="solution-count">0</span>
+
+    <div>time estimate</div> <div></div>
+    <span id="time-estimate">the time you take to generate excel</span>
+    <br>
+
+        </div>
+
+    <button id="submit-button">Submit</button>
+    <button id="build-excel-button">Generate Excel</button>
+
+<!--    <div id="output-grid"></div>-->
+
+<!--    信息显示栏-->
+
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+
+
+    <!-- 放一个标题：排课系统 -->
+    <h1>Course Table Preview</h1>
+<!--    <div id="info">after submission, here will show the courses you could pick for every keywords</div>-->
+    <div id="output-grid"></div>
+    <button id="get-scheme-button">get current table</button>
+    <button id="previous-page-button">previous</button>
+<!--    第几页-->
+    <span id="page-count">0</span>
+    <button id="next-page-button">next</button>
+    <div id="tip">try pressing your LEFT | RIGHT key</div>
+
+<!--    <div id="output-grid"></div>-->
+
+<!--    信息显示栏-->
+    <script src="{{ url_for('static', filename='js/timetable.js') }}"></script>
+
+</body>
+</html>
