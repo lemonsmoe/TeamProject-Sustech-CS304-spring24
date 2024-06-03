@@ -13,17 +13,15 @@
               <i class="el-icon-s-home"></i>
               <span slot="title">系统首页</span>
             </el-menu-item>
-            <el-menu-item index="/login">
-              <i class="el-icon-s-custom"></i>
-              <span slot="title">登录</span>
-            </el-menu-item>
+            
             <el-submenu index="2">
               <template slot="title"><i class="el-icon-menu"></i><span>学生应用</span></template>
-              <el-menu-item index="/xuanke">选课系统</el-menu-item>
+              <el-menu-item index="/xuanke">选课规划</el-menu-item>
               <el-menu-item index="/luntan">学习论坛</el-menu-item>
               <el-menu-item index="/fudao">预约辅导</el-menu-item>
               <el-menu-item index="/rili">学习日历</el-menu-item>
               <el-menu-item index="/pingjiao">评教系统</el-menu-item>
+              <el-menu-item index="/guanli" v-if="isAdmin()">管理员</el-menu-item>
             </el-submenu>
           </el-menu>
         </el-aside>
@@ -31,35 +29,28 @@
         <el-container>
           <el-header style="height: 60px; line-height: 60px; display: flex; align-items: center; box-shadow: 2px 0 6px rgba(0, 21, 41, .35);">
             <i :class="collapseIcon" @click="handleCollapse" style="font-size: 26px"></i>
-            <!--          <el-breadcrumb separator="/" style="margin-left: 20px">-->
-            <!--            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>-->
-            <!--            <el-breadcrumb-item :to="{ path: '/' }">课程管理</el-breadcrumb-item>-->
-            <!--          </el-breadcrumb>-->
-  
             <div style="flex: 1; display: flex; justify-content: flex-end; align-items: center">
               <i class="el-icon-quanping" @click="handleFullScreen" style="font-size: 25px"></i>
+              <span>{{'欢迎，' + current_student_id + '   你是：' + current_type}}</span>
               <el-dropdown placement="bottom">
+                
                 <div style="display: flex; align-items: center; cursor: pointer">
+                  
                   <img src="@/assets/nkd.jpg" alt="" style="width: 40px; height: 40px; margin: 0 5px">
                   <span>用户中心</span>
                 </div>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item>个人信息</el-dropdown-item>
-                  <el-dropdown-item>修改密码</el-dropdown-item>
-                  <el-dropdown-item>退出登录</el-dropdown-item>
+                  <el-dropdown-item @click.native="handleLogout">退出登录</el-dropdown-item>
                 </el-dropdown-menu>
               </el-dropdown>
             </div>
           </el-header>
-  
-          <el-main>
-            <el-card style=" margin-bottom: 10px" >
-                <div slot="header" class="clearfix">
-                    <span>学生选课推荐系统</span>
-                </div>
-            </el-card>
-  
-          </el-main>
+          <!-- <div :style="{ backgroundImage: `url(${require('@/assets/cover.png')})`}"> -->
+            <slot>
+              <!-- 插槽用于装载不同模块的主要内容 -->
+            </slot>
+            <!-- <img src="@/assets/cover.png" alt="OpenZS Logo" style="width: 100%; height: auto"> -->
+          <!-- </div> -->
         </el-container>
       </el-container>
   
@@ -67,93 +58,61 @@
   </template>
   
   <script>
-  
+  import request from "@/utils/request";
   export default {
-    name: 'LunTan',
+    name: 'Layout',
     data() {
       return {
-  
         isCollapse: false,
         asideWidth: '200px',
         collapseIcon: 'el-icon-s-fold',
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        },
-        formInline: {
-          xueqi: '',
-          mingcheng: '',
-          yuanxi: ''
-        },
-        tableData: [{
-          0: '第一节',
-          1: '',
-          2: '',
-          3: '',
-          4: '',
-          5: '',
-          6: '',
-          7: '',
-        }, {
-          0: '第二节',
-          1: '',
-          2: '',
-          3: '',
-          4: '',
-          5: '',
-          6: '',
-          7: '',
-        }, {
-          0: '第三节',
-          1: '',
-          2: '',
-          3: '',
-          4: '',
-          5: '',
-          6: '',
-          7: '',
-        }, {
-          0: '第四节',
-          1: '',
-          2: '',
-          3: '',
-          4: '',
-          5: '',
-          6: '',
-          7: '',
-        }, {
-          0: '第五节',
-          1: '',
-          2: '',
-          3: '',
-          4: '',
-          5: '',
-          6: '',
-          7: '',
-        }, {
-          0: '第六节',
-          1: '',
-          2: '',
-          3: '',
-          4: '',
-          5: '',
-          6: '',
-          7: '',
-        }],
-        index: 0,
-        scheme: {},
+        current_student_id: '',
+        current_type: '',
+
       }
     },
     mounted() {
   
     },
+    async created() {
+    // 在组件创建后立即发送请求
+      await this.getUser();
+    },
     methods: {
+      isAdmin() {
+        return this.current_student_id === 'admin';
+      },
+      getUser() {
+        // 获取当前用户信息
+        request.get('/general/current_student').then(res=>{
+          console.log(res);
+          if (res.status == 200) {
+            this.current_student_id = res.data.student_id;
+            if (this.current_student_id === 'admin') {
+              this.current_type = '管理员';
+            }
+            else {
+              this.current_type = '学生';
+            }
+            
+          }
+          else{
+            this.$router.push('/login');
+          }
+          
+        })
+      },
+      handleLogout() {
+        // 在这里添加退出登录的逻辑
+        console.log('正在退出登录...');
+        // 清除用户信息
+        // localStorage.removeItem('user');
+        request.get('/general/logout').then(res=>{
+          console.log(res)
+        })
+        // 跳转到登录页面
+        this.$router.push('/login');
+      },
       handleFullScreen() {
         document.documentElement.requestFullscreen()
       },
@@ -161,61 +120,6 @@
         this.isCollapse = !this.isCollapse
         this.asideWidth = this.isCollapse ? '64px' : '200px'
         this.collapseIcon = this.isCollapse ? 'el-icon-s-unfold' : 'el-icon-s-fold'
-      },
-      onSubmit() {
-        let obj = []
-        obj = this.formInline.mingcheng.split(' ')
-        console.log(obj)
-        this.axios.post('http://localhost:1314/submit_data', {
-          'password': 'my father is YHT', 'student_name': '', 'keywords': obj, 'badwords': [''], 'excluded_time': {'点': []}
-        }).then(res=>{
-  
-          this.scheme = res.data.schedule_scheme
-          // console.log(this.scheme)
-          this.show(this.index)
-  
-        })
-      },
-  
-      show(index) {
-        if (index < 0) {
-          index += 1
-        }
-        if (index >= this.scheme.length){
-          index -= 1
-        }
-        let obj = this.scheme[index]
-        for (let i = 0; i < obj.length; i++) {
-  
-          let date1 = obj[i]['上课时间'][0][1]
-          let time1 = obj[i]['上课时间'][0][0]
-  
-          let date2 = obj[i]['上课时间'][1][1]
-          let time2 = obj[i]['上课时间'][1][0]
-  
-          let classname = obj[i]['教学班']
-  
-          this.tableData[date1-1][time1] = classname
-          this.tableData[date2-1][time2] = classname
-  
-          this.index = index
-          // 组成 原理
-        }
-      },
-      next() {
-        this.clear()
-        this.show(this.index+1)
-      },
-      previous() {
-        this.clear()
-        this.show(this.index-1)
-      },
-      clear() {
-        for (let i = 0; i <= 5; i++) {
-          for (let j = 1; j <= 7; j++) {
-            this.tableData[i][j] = ''
-          }
-        }
       }
     }
   }

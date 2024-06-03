@@ -55,7 +55,7 @@
           <el-main>
             <el-card style=" margin-bottom: 10px" >
                 <div slot="header" class="clearfix">
-                    <span>学生选课推荐系统</span>
+                    <span>预约辅导</span>
                 </div>
             </el-card>
   

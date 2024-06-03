@@ -79,9 +79,9 @@ export default {
             if (res.status === 200) {
               // console.log(res)
               this.$router.push('/login')
-              this.$message.success(res.msg)
+              this.$message.success(res.data.msg)
             } else {
-              this.$message.error(res.msg)
+              this.$message.error(res.data.msg)
             }
           })
         }
