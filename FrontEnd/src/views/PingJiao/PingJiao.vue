@@ -121,6 +121,8 @@ export default {
     this.currentPage = newPage;
     this.pagedCourses = this.filteredCourses.slice((newPage - 1) * this.pageSize, newPage * this.pageSize);
   },
+
+        <!-- AI-generated-content tool: chatGPT version: 4.o usage: 要求GPT生成获取课程细节信息的方法，因为涉及到多个方法api的利用，然后我自己调整细节 -->
     async fetchCourseBriefs() {
       try {
         const coursesResponse = await request.get('/evaluation/courses/brief');
