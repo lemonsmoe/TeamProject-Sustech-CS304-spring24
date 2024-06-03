@@ -2,7 +2,7 @@ import json
 import time
 
 from .Class.Class_Scheduler import Scheduler
-# from .Tool.Tool_ClientAu import handle_authorization
+from .Tool.Tool_ClientAu import handle_authorization
 
 student_name = "hqc"
 keywords = ["软件工程", "计算机操作系统", "创新实践II-01班", "人工智能", "计算机网络"]

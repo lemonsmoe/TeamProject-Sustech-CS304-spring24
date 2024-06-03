@@ -231,7 +231,11 @@ responses:
     appointments = Appointment.query.filter_by(student_id=student_id, used=1).all()
     data = [dict((c, getattr(appointment, c)) for c in inspect(appointment).mapper.column_attrs.keys()) for appointment in appointments]
     # 获取老师的名字
-    data = [dict(appointment, tutor_name=Tutor.query.get(appointment["tutor_id"]).name) for appointment in data]
+    for workshop in data:
+      try:
+        workshop["tutor_name"] = Tutor.query.get(workshop["tutor_id"]).name
+      except:
+        workshop["tutor_name"] = "彭小僧猫娘妹妹啾咪"
     # 根据tutor_id是否为空给每个appointment添加一个type字段
     data = [dict(appointment, type="习题课" if appointment["workshop_id"] is not None else "1对1辅导") for appointment in data]
     
@@ -567,7 +571,11 @@ responses:
     workshops = Workshop.query.all()
     data = [dict((c, getattr(workshop, c)) for c in inspect(workshop).mapper.column_attrs.keys()) for workshop in workshops]
     # 获取老师的名字
-    data = [dict(workshop, tutor_name=Tutor.query.get(workshop["tutor_id"]).name) for workshop in data]
+    for workshop in data:
+      try:
+        workshop["tutor_name"] = Tutor.query.get(workshop["tutor_id"]).name
+      except:
+        workshop["tutor_name"] = "彭小僧猫娘妹妹啾咪"
     # 修改时间格式
     for workshop in data:
         workshop["time_start"] = workshop["time_start"].strftime("%Y-%m-%d %H:%M")

@@ -436,63 +436,63 @@ def add_course_ddl():
         db.session.rollback()
         return jsonify(msg="添加失败", error=str(e)), 202
         
-# @app_calender.route('/update', methods=['POST'])
-# def update_ddl():
-#     """
-#     ex:
-#     {
-#         "course_id": "CS101",
-#         "ddl_content": "123",
-#         "ddl_id": 7,
-#         "ddl_status": "完成",
-#         "ddl_time": "Sat, 18 May 2024 00:00:00 GMT",
-#         "ddl_title": "去酒店开房3",
-#         "ddl_type": "CS101"
-#     }
-#     or
-#     {
-#         "ddl_content": "完成实验报告",
-#         "ddl_id": 1,
-#         "ddl_status": "未完成",
-#         "ddl_time": "Sat, 18 May 2024 00:00:00 GMT",
-#         "ddl_title": "滋生甘我",
-#         "ddl_type": "personal",
-#         "student_id": "admin"
-#     }
-#     """
-#     req_data = request.get_json()
-#     student_id = session.get("student_id", 'admin')
-#     print(req_data)
-#     if req_data.get('course_id'):
-#         try:
-#             db.session.execute(fk_command)
-#             # print('fuckkkkkk')
-#             if req_data.get("ddl_status") == "完成":
-#                 student_course_finished = Student_Course_finished(student_id=student_id, course_ddl_id=req_data.get("ddl_id"))
-#                 db.session.add(student_course_finished)
-#             else:
-#                 student_course_finished = Student_Course_finished.query.filter_by(student_id=student_id, course_ddl_id=req_data.get("ddl_id")).first()
-#                 if student_course_finished:
-#                     db.session.delete(student_course_finished)
-#             db.session.commit()
-#             return jsonify(msg="更新成功"), 200
-#         except Exception as e:
-#             print(e)
-#             db.session.rollback()
-#             return jsonify(msg="更新失败"), 202
-#     ddl_id = req_data.get("ddl_id")
-#     ddl_status = req_data.get("ddl_status")
-#     ddl = Student_DDL.query.get(ddl_id)
-#     if ddl is None:
-#         return jsonify(msg="ddl_id 不存在"), 202
-#     ddl.ddl_status = ddl_status
-#     try:
-#         db.session.commit()
-#         return jsonify(msg="更新成功"), 200
-#     except Exception as e:
-#         print(e)
-#         db.session.rollback()
-#         return jsonify(msg="更新失败"), 202
+@app_calender.route('/update', methods=['POST'])
+def update_ddl():
+    """
+    ex:
+    {
+        "course_id": "CS101",
+        "ddl_content": "123",
+        "ddl_id": 7,
+        "ddl_status": "完成",
+        "ddl_time": "Sat, 18 May 2024 00:00:00 GMT",
+        "ddl_title": "去酒店开房3",
+        "ddl_type": "CS101"
+    }
+    or
+    {
+        "ddl_content": "完成实验报告",
+        "ddl_id": 1,
+        "ddl_status": "未完成",
+        "ddl_time": "Sat, 18 May 2024 00:00:00 GMT",
+        "ddl_title": "滋生甘我",
+        "ddl_type": "personal",
+        "student_id": "admin"
+    }
+    """
+    req_data = request.get_json()
+    student_id = session.get("student_id", 'admin')
+    print(req_data)
+    if req_data.get('course_id'):
+        try:
+            db.session.execute(fk_command)
+            # print('fuckkkkkk')
+            if req_data.get("ddl_status") == "完成":
+                student_course_finished = Student_Course_finished(student_id=student_id, course_ddl_id=req_data.get("ddl_id"))
+                db.session.add(student_course_finished)
+            else:
+                student_course_finished = Student_Course_finished.query.filter_by(student_id=student_id, course_ddl_id=req_data.get("ddl_id")).first()
+                if student_course_finished:
+                    db.session.delete(student_course_finished)
+            db.session.commit()
+            return jsonify(msg="更新成功"), 200
+        except Exception as e:
+            print(e)
+            db.session.rollback()
+            return jsonify(msg="更新失败"), 202
+    ddl_id = req_data.get("ddl_id")
+    ddl_status = req_data.get("ddl_status")
+    ddl = Student_DDL.query.get(ddl_id)
+    if ddl is None:
+        return jsonify(msg="ddl_id 不存在"), 202
+    ddl.ddl_status = ddl_status
+    try:
+        db.session.commit()
+        return jsonify(msg="更新成功"), 200
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return jsonify(msg="更新失败"), 202
     
 @app_calender.route('/student_ddl/delete', methods=['POST'])
 def delete_ddl():

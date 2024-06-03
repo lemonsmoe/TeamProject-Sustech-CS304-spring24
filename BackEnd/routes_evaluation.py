@@ -418,7 +418,7 @@ responses:
                 }
 
         # 转换为列表并取前10条
-        data = list(unique_courses.values())[:10]
+        data = list(unique_courses.values())
 
         return jsonify(data)
     except Exception as e:

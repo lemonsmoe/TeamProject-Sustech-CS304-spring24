@@ -3,8 +3,12 @@ from datetime import datetime
 import json
 from CourseRec.Client_scheduleCourse import Client_Schedule
 from models_wholeProject import app, db, fk_command, Student, Student_Star
-
+import concurrent.futures
+import multiprocessing
 app_courserc = Blueprint('app_courserc', __name__, url_prefix='/courserc')
+
+def task(data):
+        return Client_Schedule(data=data)
 
 @app_courserc.route('/submit_data', methods=['POST'])
 def handle_submission():
@@ -78,12 +82,31 @@ def handle_submission():
     data['badwords'] = list(filter(lambda x: x != '', data['badwords']))
     global scheduler
     scheduler = Client_Schedule(data=data)
+    # with multiprocessing.Pool(1) as pool:
+    #     result = pool.apply_async(task, (data,))
+
+    #     try:
+    #         scheduler = result.get(timeout=15)
+    #     except multiprocessing.TimeoutError:
+    #         print("Task timed out")
+    #         response = {'status': 'fail', "msg": '彭小僧猪脑过载了啦，你这张表很可能有过万种课程组合，我实在是算不过来啦'}
+    #         pool.terminate()  # Terminate the process
+    #         return jsonify(response)
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        future = executor.submit(task, data)
+        try:
+            scheduler = future.result(timeout=15)
+        except concurrent.futures.TimeoutError:
+            print("Task timed out")
+            response = {'status': 'fail', "msg": '彭小僧猪脑过载了啦，你这张表很可能有过万种课程组合，我实在是算不过来啦'}
+            return jsonify(response)
     # print_info()
 
 
     # threading.Thread(target=run_schedule).start()
     if scheduler is None:
-        response = {'status': 'fail'}
+        response = {'status': 'fail', "msg": '彭小僧找不到符合条件的课程安排方案，请重新设置条件捏'}
         return jsonify(response)
     else:
         print(scheduler.get_selected_course_info())
