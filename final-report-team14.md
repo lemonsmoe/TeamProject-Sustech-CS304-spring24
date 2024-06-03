@@ -228,3 +228,7 @@ vue 文件夹：代码共15481行，42个文件
 - **成功容器化证明**：提供 `docker build` 成功的快照。
 
 <img src="markdown_img/docker.png" alt="docker" style="zoom:50%;" />
+
+
+## AI使用
+项目中有部分代码和架构借鉴了ChatGPT-4和copilot。所有AI提示或生成的代码都进行了适当的注释。
