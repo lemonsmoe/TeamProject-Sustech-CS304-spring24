@@ -1,3 +1,4 @@
+# all code are written with the help of Copilot. 
 def test_submit_data(client):
     json_data = {'password': 'my father is YHT', 'student_name': '', 'keywords': ['系统', '组成'], 'badwords': [''], 'excluded_time': {'点': []}}
     response = client.post('courserc/submit_data', json=json_data)

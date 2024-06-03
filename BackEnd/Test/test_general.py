@@ -1,3 +1,4 @@
+# all code are written with the help of Copilot. 
 def test_get_students(client):
     response = client.get('/general/students')
     data = response.get_json()

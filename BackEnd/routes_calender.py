@@ -1,11 +1,10 @@
+# all code are written with the help of Copilot. 
 from flask import jsonify, request, session, Blueprint
 from datetime import datetime
 from models_wholeProject import app, db, Student_DDL, Course_DDL, Student_Course_finished, fk_command, Student_Subscribe
 from tool import connect_db
 from sqlalchemy import inspect, text
 app_calender = Blueprint('app_calender', __name__, url_prefix='/calender')
-
-
 
 @app_calender.route('/', methods=['GET'])
 def get_calender():

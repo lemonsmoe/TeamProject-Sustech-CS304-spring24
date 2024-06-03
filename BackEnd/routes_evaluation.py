@@ -1,3 +1,4 @@
+# all code are written with the help of Copilot. 
 from flask import jsonify, request, Blueprint, session
 from datetime import datetime
 from models_wholeProject import db, fk_command, CourseReview
