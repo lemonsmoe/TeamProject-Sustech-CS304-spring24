@@ -77,6 +77,8 @@
         <!-- <div slot="header" class="clearfix">
           <span>提交评价</span>
         </div> -->
+
+            <!-- AI-generated-content tool: chatGPT version: 4.o usage: 要求GPT生成各种课程属性的框架结构，属于重复工作 -->
         <div class="quick-reply-section">
           <el-form :model="newReview" class="review-form">
             <el-row :gutter="20">
@@ -280,6 +282,8 @@ export default {
           console.error("获取课程评价失败:", error);
         });
     },
+
+    <!-- AI-generated-content tool: chatGPT version: 4.o usage: 要求GPT生成各种获取课程评教统计信息 -->
     fetchCourseStats() {
       request.get(`/evaluation/review/stats/${this.$route.params.id}`)
         .then(res => {
