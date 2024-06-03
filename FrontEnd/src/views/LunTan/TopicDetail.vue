@@ -7,7 +7,6 @@
             <el-button type="text" @click="goBack">返回</el-button>
           </div>
           <!-- <span>学习论坛</span> -->
-        <!-- </div> -->
 
         <!-- 标题和正文部分 -->
         <el-card class="topic-detail-card">
@@ -26,16 +25,6 @@
         <div class="forum-container">
           <div class="comments-section">
             <el-card v-for="comment in comments" :key="comment.id" class="comment-card">
-              <!-- <div class="comment-header">
-                <img :src="comment.userAvatar" alt="User Avatar" class="user-avatar">
-                <div class="comment-head">{{ comment.student_id }}</div>
-              </div>
-              <div class="comment-body">{{ comment.content }}</div>
-              <div class="comment-footer">
-                <el-button size="mini">评论</el-button>
-                <el-button size="mini">回复</el-button>
-              </div> -->
-
               <div class="comment-container">
               <div class="comment-content">
                 <div class="comment-head">{{ comment.student_id }}</div>
@@ -69,7 +58,7 @@
 
 <script>
 import Layout from '@/components/Layout.vue'
-import request from "@/utils/request"; // 确保你已经导入了request工具
+import request from "@/utils/request"; 
 
 export default {
   name: 'TopicDetail',
@@ -96,10 +85,9 @@ export default {
   },
   mounted() {
     this.fetchTopicDetail();
-    this.fetchComments(); // 页面加载时获取评论信息
+    this.fetchComments(); 
   },
   created() {
-    // 在组件创建后立即给当前帖子发送增加浏览量的请求 Thomas添加嘻嘻嘻
     this.addView();
   },
   methods: {
@@ -113,6 +101,8 @@ export default {
         console.error("增加浏览量失败:", error);
       });
     },
+
+    <!-- AI-generated-content tool: chatGPT version: 4.o usage: 要求GPT生成获取话题细节信息的方法，然后我自己修改了相关参数和细节 -->
     fetchTopicDetail() {
       const topicId = this.$route.params.id; // 获取路由参数中的话题ID
       request.post('/forum/post/getcontent', { post_id: topicId }).then(res => {
@@ -138,6 +128,8 @@ export default {
         console.error("获取评论列表失败:", error);
       });
     },
+
+      <!-- AI-generated-content tool: chatGPT version: 4.o usage: 要求GPT生成发表评论的方法框架，与发帖逻辑相似故属于重复工作，然后我自己修改了相关参数和细节，如路由信息 -->
     postComment() {
       if (this.newComment.content.trim() !== '') {
         request.post('/forum/reply/put', this.newComment)
