@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./BackEnd
+    ports:
+      - "5050:5050"
+    volumes:
+      - ./BackEnd:/app
+    environment:
+      - FLASK_ENV=development
+
+  frontend:
+    build: ./vue
+    ports:
+      - "80:80"
+    volumes:
+      - ./vue:/app
