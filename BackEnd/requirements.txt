@@ -1,0 +1,15 @@
+beautifulsoup4==4.12.3
+coverage==7.5.3
+cryptography==41.0.7
+flasgger==0.9.7.1
+Flask==3.0.3
+Flask_Cors==4.0.0
+flask_sqlalchemy==3.1.1
+numpy==1.26.4
+openpyxl==3.1.2
+pandas==2.2.2
+pytest==8.1.1
+Requests==2.32.3
+selenium==4.21.0
+SQLAlchemy==2.0.25
+webdriver_manager==4.0.1
