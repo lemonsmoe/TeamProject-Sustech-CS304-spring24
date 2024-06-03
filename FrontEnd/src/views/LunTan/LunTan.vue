@@ -20,8 +20,8 @@
                 style="width: 300px; margin-left: auto;">
               </el-input>
             </div>
-            
-            <!-- 筛选框 -->
+
+            <!-- AI-generated-content tool: chatGPT version: 4.o usage: 要求GPT完成重复简单的列举工作，比如添加以下不同lable -->
             <!-- 筛选框 -->
             <div class="filter-buttons">
 
@@ -51,10 +51,7 @@
                 <el-option label="最多查看数" value="最多查看数"></el-option>
               </el-select>
             </div>
-
-
             
-
               <el-table :data="filteredTopics" style="width: 100%" @row-click="handleRowClick">
               <el-table-column type="index" label="序号"></el-table-column>
               <el-table-column prop="title" label="标题"  width="300"></el-table-column>
@@ -65,7 +62,6 @@
                 label="回复/查看数"
                 prop="ReplyAndViewCount"
               ></el-table-column>
-              <!-- <el-table-column prop="last_updated_time" label="最后发表" width="200"></el-table-column> -->
               <el-table-column prop="created_time" label="创建时间" width="200"></el-table-column>
             </el-table>
 
@@ -234,6 +230,7 @@ mounted(){
     });
   },
 
+ <!-- AI-generated-content tool: chatGPT version: 4.o usage: 要求GPT生成提交推文的方法，然后我自己修改了相关参数和细节 -->
   submitPost() {
     // 判断是否填写了board、title、content、topic
     if (!this.newPost.board || !this.newPost.title || !this.newPost.content || !this.newPost.topic) {
