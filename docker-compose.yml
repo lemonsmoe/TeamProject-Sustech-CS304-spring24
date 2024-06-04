@@ -11,8 +11,8 @@ services:
       - FLASK_ENV=development
 
   frontend:
-    build: ./vue
+    build: ./FrontEnd
     ports:
       - "80:80"
     volumes:
-      - ./vue:/app
+      - ./FrontEnd:/app

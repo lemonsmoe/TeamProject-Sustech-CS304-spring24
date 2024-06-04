@@ -121,7 +121,7 @@
 </template>
 
 <script>
-import ValidCode from "@/views/ValidCode";
+// import ValidCode from "@/views/ValidCode";
 import axios from "axios";
 import request from "@/utils/request";
 import Layout from '@/components/Layout.vue'
@@ -230,7 +230,7 @@ mounted(){
     });
   },
 
- <!-- AI-generated-content tool: chatGPT version: 4.o usage: 要求GPT生成提交推文的方法，然后我自己修改了相关参数和细节 -->
+//  <!-- AI-generated-content tool: chatGPT version: 4.o usage: 要求GPT生成提交推文的方法，然后我自己修改了相关参数和细节 -->
   submitPost() {
     // 判断是否填写了board、title、content、topic
     if (!this.newPost.board || !this.newPost.title || !this.newPost.content || !this.newPost.topic) {

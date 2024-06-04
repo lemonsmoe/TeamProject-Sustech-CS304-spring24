@@ -102,7 +102,7 @@ export default {
       });
     },
 
-    <!-- AI-generated-content tool: chatGPT version: 4.o usage: 要求GPT生成获取话题细节信息的方法，然后我自己修改了相关参数和细节 -->
+    // <!-- AI-generated-content tool: chatGPT version: 4.o usage: 要求GPT生成获取话题细节信息的方法，然后我自己修改了相关参数和细节 -->
     fetchTopicDetail() {
       const topicId = this.$route.params.id; // 获取路由参数中的话题ID
       request.post('/forum/post/getcontent', { post_id: topicId }).then(res => {
@@ -129,7 +129,7 @@ export default {
       });
     },
 
-      <!-- AI-generated-content tool: chatGPT version: 4.o usage: 要求GPT生成发表评论的方法框架，与发帖逻辑相似故属于重复工作，然后我自己修改了相关参数和细节，如路由信息 -->
+      // <!-- AI-generated-content tool: chatGPT version: 4.o usage: 要求GPT生成发表评论的方法框架，与发帖逻辑相似故属于重复工作，然后我自己修改了相关参数和细节，如路由信息 -->
     postComment() {
       if (this.newComment.content.trim() !== '') {
         request.post('/forum/reply/put', this.newComment)

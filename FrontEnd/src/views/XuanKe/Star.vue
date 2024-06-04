@@ -172,7 +172,7 @@ getStar() {
     console.log(res.data)
     this.scheme = res.data
     this.total = Object.keys(this.scheme).length;
-    this.index = 0;
+    this.index = this.index % this.total
     this.show(this.scheme[this.index])
   }).catch(err=>{
     console.log(err)
@@ -235,8 +235,9 @@ onSubmit() {
 show(obj) {
   this.clear()
   this.courseNameMap = {}
-
+  let credit = 0
   for (let i = 0; i < obj.length; i++) {
+    credit += parseFloat(obj[i]['学分'])
     this.courseNameMap[obj[i]['教学班']] = this.all_color[i]
 
     let date1 = obj[i]['上课时间'][0][1]
@@ -255,6 +256,7 @@ show(obj) {
 
     this.tableData[date2-1][time2] = classname
   }
+  this.tableData[5][7] = `总学分: ${credit}`
 },
 next() {
   if (this.index == this.total - 1) {
