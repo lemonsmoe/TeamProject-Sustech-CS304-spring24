@@ -203,13 +203,14 @@ vue 文件夹：代码共15481行，42个文件
   
 - **开发者文档:**
   API文档快照：
-  ![alt text](markdown_img/4b30feeb41a582febc566bc8fc17c5d.jpg)
+<img src="markdown_img/apidoc.jpg" alt="apidoc" style="zoom:50%;" />
   访问后端API文档：http://localhost:5050/apidocs
   
 
 ### 3. 测试
 采用自动化测试可以用以下工具：
 使用pytest 进行单元测试或集成测试。
+<img src="markdown_img/pytestcode.png" alt="pytest" style="zoom:50%;" />
 - **测试覆盖率报告**：使用 `jest --coverage` 或 `pytest --cov` 等命令生成测试覆盖率报告。
 将相关的测试链接或文件的截图贴上报告中。
 <img src="markdown_img/pytest.png" alt="测试覆盖率" style="zoom:50%;" />
@@ -220,6 +221,8 @@ vue 文件夹：代码共15481行，42个文件
 - 构建过程中执行的任务：下载前端运行所需依赖，构建前端文件，下载后端运行所需依赖，构建容器。
 - 构建完成后的产物：构建前端文件生成的index.html，可用于进一步生成可执行文件；Docker容器化整个应用的镜像。
 - 与构建相关的文件：Jenkinsfile、package.json、Dockerfile。
+<img src="markdown_img/buildfront.png" style="zoom:50%;" />
+<img src="markdown_img/build.png" style="zoom:50%;" />
 
 ### 5. 部署
 用于容器化和部署：
