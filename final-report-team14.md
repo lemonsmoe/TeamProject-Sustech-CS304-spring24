@@ -208,12 +208,18 @@ vue 文件夹：代码共15481行，42个文件
   
 
 ### 3. 测试
-采用自动化测试可以用以下工具：
-使用pytest 进行单元测试或集成测试。
-<img src="markdown_img/pytestcode.png" alt="pytest" style="zoom:50%;" />
-- **测试覆盖率报告**：使用 `jest --coverage` 或 `pytest --cov` 等命令生成测试覆盖率报告。
-将相关的测试链接或文件的截图贴上报告中。
+- 采用 `jest --coverage` 和 `pytest --cov` 进行自动化测试，生成测试覆盖率报告。
+- 测试覆盖率报告：
 <img src="markdown_img/pytest.png" alt="测试覆盖率" style="zoom:50%;" />
+
+- 部分测试源代码如下：
+<img src="markdown_img/pytestcode.png" alt="测试源代码" style="zoom:50%;" />
+
+- 测试结果分析
+报告的测试覆盖率为 66%，能够有效捕捉大部分关键功能异常。覆盖率无法继续提升可能因为：
+1、异常处理代码没有被测试覆盖，因为测试用例没有模拟所有异常情况。
+2、某些代码依赖外部系统（如数据库、第三方API等），导致测试难以进行，或者这些部分被跳过。
+3、项目中存在部分遗留无用代码，这些代码可能没有测试。
 
 ### 4. 构建
 - 使用 Jenkins 完成自动化构建流程。
@@ -221,6 +227,7 @@ vue 文件夹：代码共15481行，42个文件
 - 构建过程中执行的任务：下载前端运行所需依赖，构建前端文件，下载后端运行所需依赖，构建容器。
 - 构建完成后的产物：构建前端文件生成的index.html，可用于进一步生成可执行文件；Docker容器化整个应用的镜像。
 - 与构建相关的文件：Jenkinsfile、package.json、Dockerfile。
+以下是部分构建文件截图：
 <img src="markdown_img/buildfront.png" style="zoom:50%;" />
 <img src="markdown_img/build.png" style="zoom:50%;" />
 
