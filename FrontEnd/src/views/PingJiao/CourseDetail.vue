@@ -283,7 +283,7 @@ export default {
         });
     },
 
-    <!-- AI-generated-content tool: chatGPT version: 4.o usage: 要求GPT生成各种获取课程评教统计信息 -->
+    //<!-- AI-generated-content tool: chatGPT version: 4.o usage: 要求GPT生成各种获取课程评教统计信息 -->
     fetchCourseStats() {
       request.get(`/evaluation/review/stats/${this.$route.params.id}`)
         .then(res => {
@@ -378,4 +378,3 @@ export default {
   justify-content: space-between;
 }
 </style>
-
